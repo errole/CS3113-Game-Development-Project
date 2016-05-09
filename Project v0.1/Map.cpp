@@ -223,37 +223,3 @@ void Map::tileToWorldCoordinates(int gridX, int gridY, float *worldX, float *wor
     *worldY = (float)(-gridY * TILE_SIZE);
 }
 
-bool Map::bottomCollision(Entity *player){
-    int gridX;
-    int gridY;
-    worldToTileCoordinates(player->x, (player->y-(player->sprite->size/2)), &gridX, &gridY);
-    for(int i=0;i<solids.size();i++){
-        if((int)(levelData[gridY][gridX])==solids[i]){
-            return true;
-        }
-    }
-    return false;
-}
-bool Map::RightCollision(Entity *player){
-    int gridX;
-    int gridY;
-    worldToTileCoordinates(player->x+(player->sprite->size/2), player->y, &gridX, &gridY);
-    for(int i=0;i<solids.size();i++){
-        if((int)(levelData[gridY][gridX])==solids[i]){
-            return true;
-        }
-    }
-    return false;
-}
-bool Map::LeftCollision(Entity *player){
-    int gridX;
-    int gridY;
-    worldToTileCoordinates(player->x-(player->sprite->size/2), player->y, &gridX, &gridY);
-    for(int i=0;i<solids.size();i++){
-        if((int)(levelData[gridY][gridX])==solids[i]){
-            return true;
-        }
-    }
-    return false;
-}
-

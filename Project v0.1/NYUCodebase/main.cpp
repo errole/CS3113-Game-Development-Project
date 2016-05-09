@@ -1,3 +1,4 @@
+
 #ifdef _WINDOWS
 #include <GL/glew.h>
 #endif
@@ -12,6 +13,7 @@
 #include "Entity.h"
 #include "Utilities.h"
 #include "Map.h"
+#include <map>
 using namespace std;
 #ifdef _WINDOWS
 #define RESOURCE_FOLDER ""
@@ -27,6 +29,7 @@ unsigned char** levelData;
 const Uint8 *keys = SDL_GetKeyboardState(NULL);
 ShaderProgram* program;
 GLuint mapTexture=0;
+GLuint unitTexture=0;
 //Game States
 enum GameState { STATE_MAIN_MENU, STATE_GAME_LEVEL, STATE_WIN, STATE_LOSE};
 int state = STATE_MAIN_MENU;
@@ -38,9 +41,10 @@ Matrix projectionMatrix;
 Matrix modelMatrix;
 Matrix viewMatrix;
 //Entity & Map Data
+Entity *select;
 Map level;
-vector<Entity> mapEntities;
-vector<Entity> enemies;
+vector<Entity> player1;
+vector<Entity> player2;
 int gridX;
 int gridY;
 float posX=0;
@@ -75,6 +79,8 @@ void Setup(ShaderProgram &program){
 void RenderGameLevel(ShaderProgram &program){
     //Rendering
     level.renderLevel(&program, mapTexture, modelMatrix);
+    player1[0].Render(modelMatrix);
+    select->Render(modelMatrix);
     //Scrolling
     viewMatrix.identity();
     viewMatrix.Scale(zoom, zoom, 0);
@@ -103,14 +109,12 @@ void UpdateGameLevel(ShaderProgram &program){
     if(keys[SDL_SCANCODE_LEFT]){
         posX+=screenMovement;
     }
-    
     if(keys[SDL_SCANCODE_O]){
         zoom+=zoomRes;
     }
     if(keys[SDL_SCANCODE_L]){
         zoom-=zoomRes;
     }
-    //cout << zoom;
 }
 
 int main(int argc, char *argv[])
@@ -136,14 +140,19 @@ int main(int argc, char *argv[])
     projectionMatrix.setOrthoProjection(-5.55, 5.55, -3.0f, 3.0f, -1.0f, 1.0f);
     
     Setup(*program);
-    
     Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 4096 );
     Mix_Music *music;
     music = Mix_LoadMUS( "War Theme  America the Beautiful.mp3");
     Mix_PlayMusic(music, -1);
-    
     mapTexture = LoadTexture("RPGpack_sheet.png");
-    SheetSprite mySprite(program, mapTexture, 30, 30, 19, .3);
+    SheetSprite mapSprite(program, mapTexture, 20, 13, .3);
+    unitTexture = LoadTexture("Map_units.png");
+    SheetSprite unitSprite(program, unitTexture, 26, 10, .3);
+    Entity unit(0, 0, Inf, unitSprite);
+    select=new Entity(0,0,Selection,mapSprite);
+    player1.push_back(unit);
+    bool selectionOn = false;
+    Entity *unitSelected = nullptr;
     
     while (!done) {
         
@@ -151,6 +160,30 @@ int main(int argc, char *argv[])
             if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE) {
                 done = true;
             }else if(event.type == SDL_KEYDOWN) {
+                if(keys[SDL_SCANCODE_X]){
+                    if( selectionOn==true){
+                        unitSelected->x=select->x;
+                        unitSelected->y=select->y;
+                    }
+                    for(int i =0;i<player1.size(); i++){
+                        if(player1[i].x==select->x && player1[i].y==select->y ){
+                            selectionOn=true;
+                            unitSelected = &player1[i];
+                        }
+                    }
+                }
+                if(keys[SDL_SCANCODE_W] && select->y>0){
+                    select->y-=1;
+                }
+                if(keys[SDL_SCANCODE_S]&& select->y<level.mapHeight-1){
+                    select->y+=1;
+                }
+                if(keys[SDL_SCANCODE_D]&& select->x<level.mapWidth-1){
+                    select->x+=1;
+                }
+                if(keys[SDL_SCANCODE_A]&& select->x>0){
+                    select->x-=1;
+                }
             }
         }
         
