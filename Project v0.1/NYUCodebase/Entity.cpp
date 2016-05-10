@@ -6,6 +6,9 @@
 //
 
 #include "Entity.h"
+#include <vector>
+#include <math.h>
+using namespace std;
 
 float damMod[6][6]={
     1,   .8,    1.5,   1,  1,   1,
@@ -58,4 +61,18 @@ void SheetSprite::renderGraphics(Matrix &modelMatrix, Entity &player) {
 
 void Entity::Render(Matrix &modelMatrix){
     sprite->renderGraphics(modelMatrix,*this);
+}
+
+bool Entity::checkOccupation(vector<Entity> &units){
+    for(int i=0;i<units.size();i++){
+        if(units[i].x == this->x && units[i].y==this->y){
+            return false;
+        }
+    }
+    return true;
+}
+
+float Entity::movementDistance(Entity *other){
+    int num = fabs(this->x-other->x)+fabs(this->y-other->y);
+    return num;
 }

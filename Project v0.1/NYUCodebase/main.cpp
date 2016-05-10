@@ -40,16 +40,16 @@ float elapsed = 0.0;
 Matrix projectionMatrix;
 Matrix modelMatrix;
 Matrix viewMatrix;
-//Entity & Map Data
-Entity *select;
-Map level;
-vector<Entity> player1;
-vector<Entity> player2;
-int gridX;
-int gridY;
+//Camera Position/Variables
 float posX=0;
 float posY=0;
 float zoom=.1;
+//Entity & Map Data
+bool selectionOn = false;
+Entity *select;
+Entity *selectionWindow;
+Map level;
+vector<Entity> allUnits;
 
 void Setup(ShaderProgram &program){
     //Load Map File
@@ -69,18 +69,18 @@ void Setup(ShaderProgram &program){
         else if(line == "[ObjectsLayer]") {
         }
     }
-    /*
-    mapTexture = LoadTexture("mapTexture.png");
-    SheetSprite mySprite(program, mapTexture, 30, 30, 20, .3);
-    player.sprite = &mySprite;
-     */
 }
 
 void RenderGameLevel(ShaderProgram &program){
     //Rendering
     level.renderLevel(&program, mapTexture, modelMatrix);
-    player1[0].Render(modelMatrix);
+    for(int i =0; i<allUnits.size();i++){
+        allUnits[i].Render(modelMatrix);
+    }
     select->Render(modelMatrix);
+    if(selectionOn){
+        selectionWindow->Render(modelMatrix);
+    }
     //Scrolling
     viewMatrix.identity();
     viewMatrix.Scale(zoom, zoom, 0);
@@ -93,7 +93,7 @@ void RenderGameLevel(ShaderProgram &program){
 void UpdateGameLevel(ShaderProgram &program){
     float screenMovement=0.1;
     float zoomRes=.01;
-    
+    //Zoom and Scroll Controls
     if(keys[SDL_SCANCODE_UP]){
         posY-=screenMovement;
     }
@@ -148,30 +148,44 @@ int main(int argc, char *argv[])
     SheetSprite mapSprite(program, mapTexture, 20, 13, .3);
     unitTexture = LoadTexture("Map_units.png");
     SheetSprite unitSprite(program, unitTexture, 26, 10, .3);
-    Entity unit(0, 0, Inf, unitSprite);
-    select=new Entity(0,0,Selection,mapSprite);
-    player1.push_back(unit);
-    bool selectionOn = false;
-    Entity *unitSelected = nullptr;
-    
+    select=new Entity(0, 0, NotType, None, mapSprite);
+    select->index=15;
+    selectionWindow=new Entity(0, 0, NotType, None, mapSprite);
+    selectionWindow->index=16;
+    Entity *unitSelected=new Entity(0, 0, NotType, None, mapSprite);
+    //Add Units
+    Entity unit(0, 0, Inf, Red, unitSprite);
+    Entity unit2(1, 1, APC, Blue, unitSprite);
+    allUnits.push_back(unit);
+    allUnits.push_back(unit2);
+    int playerTurn=1;
     while (!done) {
         
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE) {
                 done = true;
             }else if(event.type == SDL_KEYDOWN) {
+                //Allow Player to Select Own Units and then 2nd time is movement
                 if(keys[SDL_SCANCODE_X]){
                     if( selectionOn==true){
-                        unitSelected->x=select->x;
-                        unitSelected->y=select->y;
-                    }
-                    for(int i =0;i<player1.size(); i++){
-                        if(player1[i].x==select->x && player1[i].y==select->y ){
-                            selectionOn=true;
-                            unitSelected = &player1[i];
+                        if(select->checkOccupation(allUnits) && unitSelected->movementDistance(select)<=unitSelected->baseMovement){
+                            unitSelected->baseMovement-=unitSelected->movementDistance(select);
+                            unitSelected->x=select->x;
+                            unitSelected->y=select->y;
+                            selectionOn = false;
+                        }
+                    }else{
+                        for(int i =0;i<allUnits.size(); i++){
+                            if(allUnits[i].x==select->x && allUnits[i].y==select->y && allUnits[i].fraction==playerTurn && allUnits[i].baseMovement>0){
+                                selectionOn=true;
+                                unitSelected = &allUnits[i];
+                                selectionWindow->x=unitSelected->x;
+                                selectionWindow->y=unitSelected->y;
+                            }
                         }
                     }
                 }
+                //Shadow Box Movement Controls
                 if(keys[SDL_SCANCODE_W] && select->y>0){
                     select->y-=1;
                 }
@@ -183,6 +197,20 @@ int main(int argc, char *argv[])
                 }
                 if(keys[SDL_SCANCODE_A]&& select->x>0){
                     select->x-=1;
+                }
+                if(keys[SDL_SCANCODE_RETURN]){
+                    cout<<"Enter";
+                    //Alternate Players
+                    playerTurn+=1;
+                    if(playerTurn>2){
+                        playerTurn=1;
+                    }
+                    //Rechrage all Movement
+                    for(int i=0; i<allUnits.size();i++){
+                        if(playerTurn==allUnits[i].fraction){
+                            allUnits[i].baseMovement=3;
+                        }
+                    }
                 }
             }
         }
