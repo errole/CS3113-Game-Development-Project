@@ -187,6 +187,7 @@ int main(int argc, char *argv[])
                             if(allUnits[i].x==selectionWindow->x && allUnits[i].y==selectionWindow->y && allUnits[i].fraction==playerTurn && allUnits[i].baseMovement>0){
                                 moveWindowOn=true;
                                 unitSelected = &allUnits[i];
+                                cout <<unitSelected->baseMovement;
                                 moveWindow->x=unitSelected->x;
                                 moveWindow->y=unitSelected->y;
                             }
@@ -216,18 +217,20 @@ int main(int argc, char *argv[])
                     //Recharge all Movement
                     for(int i=0; i<allUnits.size();i++){
                         if(playerTurn==allUnits[i].fraction){
-                            allUnits[i].baseMovement=3;
+                            allUnits[i].rechargeMovement();
                         }
                     }
                 }
+                //Enter Attack Mode
                 if(keys[SDL_SCANCODE_Z]){
                     if( warWindowOn==true){
                         if( unitSelected->distance(selectionWindow)==1){
                             for(int i =0;i<allUnits.size(); i++){
                                 if(allUnits[i].x==selectionWindow->x && allUnits[i].y==selectionWindow->y && allUnits[i].fraction!=playerTurn){
-                                    allUnits[i].baseHealth-=unitSelected->baseDamage;
+                                    
+                                    unitSelected->attack(&allUnits[i]);
                                     if(allUnits[i].baseHealth<=0){
-                                        allUnits.erase(allUnits.begin() + i-1);
+                                        allUnits.erase(allUnits.begin() + i);
                                     }
                                 }
                             }

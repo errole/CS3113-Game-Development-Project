@@ -31,6 +31,7 @@ public:
     int SPRITE_COUNT_Y = 10;
 };
 
+
 enum Fraction {None, Red, Blue, Green};
 enum UnitKind {NotUnit, BUILDING, UNIT};
 enum UnitType {NotType, Inf,ATInf,APC,LTank,MTank,HTank,Selection,Highlight};
@@ -38,20 +39,13 @@ enum UnitType {NotType, Inf,ATInf,APC,LTank,MTank,HTank,Selection,Highlight};
 class Entity {
 public:
     Entity();
-    Entity(float x, float y, UnitType unitType, Fraction fraction, SheetSprite &sprite): x(x), y(y), fraction(fraction),sprite(&sprite), unitType(unitType) {
-        if(unitType==Inf){index=0+sprite.SPRITE_COUNT_X*(fraction-1);}
-        else if(unitType==ATInf){index=1+sprite.SPRITE_COUNT_X*(fraction-1);}
-        else if(unitType==APC){index=2+sprite.SPRITE_COUNT_X*(fraction-1);}
-        else if(unitType==LTank){index=4+sprite.SPRITE_COUNT_X*(fraction-1);}
-        else if(unitType==MTank){index=5+sprite.SPRITE_COUNT_X*(fraction-1);}
-        else if(unitType==HTank){index=6+sprite.SPRITE_COUNT_X*(fraction-1);}
-        else if(unitType==Selection){index=15;}
-    };
+    Entity(float x, float y, UnitType unitType, Fraction fraction, SheetSprite &sprite);
     
     void Render(Matrix &modelMatrix);
     bool checkOccupation(vector<Entity> &units);
     float distance(Entity *other);
-    //void rechargeMovements(vector<Entity> &units, Fraction player);
+    void rechargeMovement();
+    void attack(Entity *other);
     
     float x;
     float y;
@@ -60,7 +54,7 @@ public:
     
     float baseHealth=10;
     float baseDamage=5;
-    float baseMovement=3;
+    float baseMovement=0;
     float Experience;
     Fraction fraction;
     UnitKind unitKind;
