@@ -186,7 +186,7 @@ int main(int argc, char *argv[])
     int playerTurn = 1;
     while (!done) {
         while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE) {
+            if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE || keys[SDL_SCANCODE_ESCAPE]) {
                 done = true;
             }
             else if (event.type == SDL_KEYDOWN) {
