@@ -32,8 +32,8 @@ SDL_Window* displayWindow;
 unsigned char** levelData;
 const Uint8 *keys = SDL_GetKeyboardState(NULL);
 ShaderProgram* program;
-GLuint mapTexture=0;
-GLuint unitTexture=0;
+GLuint mapTexture = 0;
+GLuint unitTexture = 0;
 
 //Game States
 enum GameState {
@@ -84,7 +84,7 @@ void Setup (ShaderProgram &program) {
     }
 }
 
-void RenderGameLevel (ShaderProgram &program, float elapsed) {
+void RenderGameLevel(ShaderProgram &program, float elapsed) {
     //Rendering
     level.renderLevel(&program, mapTexture, modelMatrix);
     for (int i = 0; i<allUnits.size(); i++) {
@@ -111,8 +111,8 @@ void RenderGameLevel (ShaderProgram &program, float elapsed) {
 }
 
 void UpdateGameLevel(ShaderProgram &program) {
-    float screenMovement=0.1;
-    float zoomRes=.01;
+    float screenMovement = 0.1;
+    float zoomRes = 0.01;
     //Zoom and Scroll Controls
     if (keys[SDL_SCANCODE_UP]) {
         posY -= screenMovement;
@@ -164,7 +164,7 @@ int main(int argc, char *argv[])
     Setup(*program);
     Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 4096 );
     Mix_Music *music;
-    music = Mix_LoadMUS( "War Theme  America the Beautiful.mp3");
+    music = Mix_LoadMUS("War Theme  America the Beautiful.mp3");
     Mix_PlayMusic(music, -1);
     mapTexture = LoadTexture("RPGpack_sheet.png");
     SheetSprite mapSprite(program, mapTexture, 20, 13, .3);
@@ -201,8 +201,8 @@ int main(int argc, char *argv[])
                         }
                     }
                     else {
-                        for(int i =0;i<allUnits.size(); i++) {
-                            if (allUnits[i].x == selectionWindow->x && allUnits[i].y == selectionWindow->y && allUnits[i].fraction == playerTurn && allUnits[i].baseMovement>0) {
+                        for(int i = 0; i < allUnits.size(); i++) {
+                            if (allUnits[i].x == selectionWindow->x && allUnits[i].y == selectionWindow->y && allUnits[i].fraction == playerTurn && allUnits[i].baseMovement > 0) {
                                 moveWindowOn = true;
                                 unitSelected = &allUnits[i];
                                 cout << unitSelected->baseMovement;
@@ -243,7 +243,7 @@ int main(int argc, char *argv[])
                 if(keys[SDL_SCANCODE_Z]) {
                     if(warWindowOn == true) {
                         if(unitSelected->distance(selectionWindow) == 1) {
-                            for(int i = 0;i<allUnits.size(); i++){
+                            for(int i = 0;i<allUnits.size(); i++) {
                                 if(allUnits[i].x == selectionWindow->x && allUnits[i].y == selectionWindow->y && allUnits[i].fraction != playerTurn) {
                                     unitSelected->attack(&allUnits[i]);
                                     if(allUnits[i].baseHealth <= 0) {
