@@ -66,7 +66,7 @@ vector<Entity> allUnits;
 
 void Setup (ShaderProgram &program) {
     //Load Map File
-    string levelFileOne = "/Users/Kevin/Desktop/Stuff/NYU-Poly/CS3113/Final/CS3113-Game-Development-Project/Project v0.25/resources/gamemap1.txt";
+    string levelFileOne = "/Users/errolelbasan/Documents/Codes/Game-Development-Project/Project v0.25/resources/gamemap1.txt";
     ifstream infile(levelFileOne);
     string line;
     while (getline(infile, line)) {
@@ -103,8 +103,8 @@ void RenderGameLevel(ShaderProgram &program, float elapsed) {
     viewMatrix.Scale(zoom, zoom, 0);
     viewMatrix.Translate(posX,posY,0);
     //viewMatrix.Rotate(.3);
-    viewMatrix.Pitch(elapsed/2);
-    viewMatrix.Yaw(elapsed);
+    //viewMatrix.Pitch(elapsed/2);
+    //viewMatrix.Yaw(elapsed);
     //cout << elapsed << endl;
     program.setViewMatrix(viewMatrix);
 
@@ -164,8 +164,13 @@ int main(int argc, char *argv[])
     Setup(*program);
     Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 4096 );
     Mix_Music *music;
+    Mix_Chunk *bullet;
     music = Mix_LoadMUS("War Theme  America the Beautiful.mp3");
+    bullet = Mix_LoadWAV("bullet.wav");
     Mix_PlayMusic(music, -1);
+    Mix_PlayChannel(-1, bullet, 0);
+    
+    
     mapTexture = LoadTexture("RPGpack_sheet.png");
     SheetSprite mapSprite(program, mapTexture, 20, 13, .3);
     unitTexture = LoadTexture("Map_units.png");
@@ -186,7 +191,7 @@ int main(int argc, char *argv[])
     int playerTurn = 1;
     while (!done) {
         while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE || keys[SDL_SCANCODE_ESCAPE]) {
+            if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE) {
                 done = true;
             }
             else if (event.type == SDL_KEYDOWN) {

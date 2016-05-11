@@ -8,6 +8,7 @@
 #include "Entity.h"
 #include <vector>
 #include <math.h>
+#include <SDL_mixer.h>
 using namespace std;
 
 const int width = 7;

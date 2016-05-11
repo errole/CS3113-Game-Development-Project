@@ -26,6 +26,7 @@
 		D34FAAE91CD1AB62007C4DBB /* Map_units.png in Resources */ = {isa = PBXBuildFile; fileRef = D34FAAE61CD1AB62007C4DBB /* Map_units.png */; };
 		D34FAAEA1CD1AB62007C4DBB /* RPGpack_sheet.png in Resources */ = {isa = PBXBuildFile; fileRef = D34FAAE71CD1AB62007C4DBB /* RPGpack_sheet.png */; };
 		D34FAAEC1CD1ADD8007C4DBB /* gamemap1.txt in Resources */ = {isa = PBXBuildFile; fileRef = D34FAAEB1CD1ADD8007C4DBB /* gamemap1.txt */; };
+		D367A2461CE3E331006274F7 /* bullet.wav in Resources */ = {isa = PBXBuildFile; fileRef = D367A2451CE3E331006274F7 /* bullet.wav */; };
 		D36F41021C85E859009F70CC /* Entity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D36F41001C85E859009F70CC /* Entity.cpp */; };
 		D36F41051C85EC88009F70CC /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D36F41031C85EC88009F70CC /* Utilities.cpp */; };
 		D388AEBF1CD279BE00E5860E /* War Theme  America the Beautiful.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = D388AEBE1CD279BE00E5860E /* War Theme  America the Beautiful.mp3 */; };
@@ -61,6 +62,7 @@
 		D34FAAE61CD1AB62007C4DBB /* Map_units.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Map_units.png; path = resources/Map_units.png; sourceTree = SOURCE_ROOT; };
 		D34FAAE71CD1AB62007C4DBB /* RPGpack_sheet.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = RPGpack_sheet.png; path = resources/RPGpack_sheet.png; sourceTree = SOURCE_ROOT; };
 		D34FAAEB1CD1ADD8007C4DBB /* gamemap1.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = gamemap1.txt; path = resources/gamemap1.txt; sourceTree = SOURCE_ROOT; };
+		D367A2451CE3E331006274F7 /* bullet.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = bullet.wav; path = ../../Resources/bullet.wav; sourceTree = "<group>"; };
 		D36F41001C85E859009F70CC /* Entity.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Entity.cpp; sourceTree = "<group>"; };
 		D36F41011C85E859009F70CC /* Entity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Entity.h; sourceTree = "<group>"; };
 		D36F41031C85EC88009F70CC /* Utilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Utilities.cpp; sourceTree = "<group>"; };
@@ -165,6 +167,7 @@
 		6D5A86E119AE5CAA0066C1FD /* Code */ = {
 			isa = PBXGroup;
 			children = (
+				D367A2451CE3E331006274F7 /* bullet.wav */,
 				D388AEBE1CD279BE00E5860E /* War Theme  America the Beautiful.mp3 */,
 				D34FAAEB1CD1ADD8007C4DBB /* gamemap1.txt */,
 				D34FAAE61CD1AB62007C4DBB /* Map_units.png */,
@@ -243,6 +246,7 @@
 			files = (
 				D34FAAEA1CD1AB62007C4DBB /* RPGpack_sheet.png in Resources */,
 				6D5A86B819AE5C710066C1FD /* InfoPlist.strings in Resources */,
+				D367A2461CE3E331006274F7 /* bullet.wav in Resources */,
 				D388AEBF1CD279BE00E5860E /* War Theme  America the Beautiful.mp3 in Resources */,
 				6DEF23C11B96CC2600BCE792 /* fragment.glsl in Resources */,
 				6DE9D2F11BA6AB8C002D599C /* fragment_textured.glsl in Resources */,
