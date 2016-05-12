@@ -21,6 +21,7 @@ public:
     SheetSprite(ShaderProgram* program, unsigned int textureID, int SPRITE_COUNT_X, int SPRITE_COUNT_Y, float TILE_SIZE): program(program), textureID(textureID), SPRITE_COUNT_X(SPRITE_COUNT_X), SPRITE_COUNT_Y(SPRITE_COUNT_Y), TILE_SIZE(TILE_SIZE){};
     
     void renderGraphics(Matrix &modelMatrix, Entity &player);
+    void renderGraphics(Matrix &modelMatrix,int gridX, int gridY, int index);
     
     ShaderProgram* program;
     Matrix* modelMatrix;

@@ -35,6 +35,7 @@ ShaderProgram* program;
 GLuint mapTexture = 0;
 GLuint unitTexture = 0;
 
+
 //Game States
 enum GameState {
     STATE_MAIN_MENU, STATE_GAME_LEVEL, STATE_WIN, STATE_LOSE
@@ -64,9 +65,10 @@ Entity *warWindow;
 Map level;
 vector<Entity> allUnits;
 
+
 void Setup (ShaderProgram &program) {
     //Load Map File
-    string levelFileOne = "/Users/errolelbasan/Documents/Codes/Game-Development-Project/Project v0.25/resources/gamemap1.txt";
+    string levelFileOne = "/Users/Kevin/Desktop/Stuff/NYU-Poly/CS3113/Final/CS3113-Game-Development-Project/Project v0.25/resources/gamemap1.txt";
     ifstream infile(levelFileOne);
     string line;
     while (getline(infile, line)) {
@@ -97,7 +99,7 @@ void RenderGameLevel(ShaderProgram &program, float elapsed) {
     if (warWindowOn) {
         warWindow->Render(modelMatrix);
     }
-    
+
     //Scrolling
     viewMatrix.identity();
     viewMatrix.Scale(zoom, zoom, 0);
@@ -139,6 +141,8 @@ void UpdateGameLevel(ShaderProgram &program) {
     }
 }
 
+int death =0;
+
 int main(int argc, char *argv[])
 {
     SDL_Init(SDL_INIT_VIDEO);
@@ -174,6 +178,10 @@ int main(int argc, char *argv[])
     mapTexture = LoadTexture("RPGpack_sheet.png");
     SheetSprite mapSprite(program, mapTexture, 20, 13, .3);
     unitTexture = LoadTexture("Map_units.png");
+    GLuint fire1Texture = LoadTexture("/Users/Kevin/Desktop/Stuff/NYU-Poly/CS3113/Final/CS3113-Game-Development-Project/Project v0.25/NYUCodebase/fire.png");
+    SheetSprite fire1Sprite(program, fire1Texture, 1, 1, .3);
+    GLuint fire2Texture = LoadTexture("/Users/Kevin/Desktop/Stuff/NYU-Poly/CS3113/Final/CS3113-Game-Development-Project/Project v0.25/NYUCodebase/fire2.png");
+    SheetSprite fire2Sprite(program, fire2Texture, 1, 1, .3);
     SheetSprite unitSprite(program, unitTexture, 26, 10, .3);
     selectionWindow=new Entity(0, 0, NotType, None, mapSprite);
     selectionWindow->index = 15;
@@ -244,6 +252,7 @@ int main(int argc, char *argv[])
                         }
                     }
                 }
+                
                 //Enter Attack Mode
                 if(keys[SDL_SCANCODE_Z]) {
                     if(warWindowOn == true) {
@@ -251,9 +260,7 @@ int main(int argc, char *argv[])
                             for(int i = 0;i<allUnits.size(); i++) {
                                 if(allUnits[i].x == selectionWindow->x && allUnits[i].y == selectionWindow->y && allUnits[i].fraction != playerTurn) {
                                     unitSelected->attack(&allUnits[i]);
-                                    if(allUnits[i].baseHealth <= 0) {
-                                        allUnits.erase(allUnits.begin() + i);
-                                    }
+                                    
                                 }
                             }
                             warWindowOn = false;
@@ -272,7 +279,22 @@ int main(int argc, char *argv[])
                 }
             }
         }
-        
+        for(int i = 0;i<allUnits.size(); i++) {
+            if(allUnits[i].baseHealth <= 0) {
+                if(death % 4 == 0){
+                    allUnits[i].sprite = &fire1Sprite;
+                    death++;
+                }
+
+                else if(death % 4 == 1){
+                    allUnits[i].sprite = &fire2Sprite;
+                    death++;
+                }
+                else{
+                    allUnits.erase(allUnits.begin() + i);
+                }
+            }
+        }
         float ticks = (float)SDL_GetTicks()/1000.0f;
         float elapsed = ticks - lastFrameTicks;
         lastFrameTicks = ticks;

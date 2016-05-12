@@ -65,6 +65,44 @@ void SheetSprite::renderGraphics(Matrix &modelMatrix, Entity &player) {
     glDisableVertexAttribArray(program->texCoordAttribute);
 
 }
+void SheetSprite::renderGraphics(Matrix &modelMatrix, int gridX, int gridY, int index) {
+    modelMatrix.identity();
+    
+    
+    float u = (float)(((int)index) % SPRITE_COUNT_X) / (float) SPRITE_COUNT_X;
+    float v = (float)(((int)index) / SPRITE_COUNT_X) / (float) SPRITE_COUNT_Y;
+    float spriteWidth= 1.0f/(float)SPRITE_COUNT_X;
+    float spriteHeight = 1.0f/(float)SPRITE_COUNT_Y;
+    float vertexData[] ={
+        TILE_SIZE * gridX, -TILE_SIZE * gridY,
+        TILE_SIZE * gridX, (-TILE_SIZE * gridY)-TILE_SIZE,
+        (TILE_SIZE * gridX)+TILE_SIZE, (-TILE_SIZE * gridY)-TILE_SIZE,
+        TILE_SIZE * gridX, -TILE_SIZE * gridY,
+        (TILE_SIZE * gridX)+TILE_SIZE, (-TILE_SIZE * gridY)-TILE_SIZE,
+        (TILE_SIZE * gridX)+TILE_SIZE, -TILE_SIZE * gridY
+    };
+    float texCoordData[] = {
+        u, v,
+        u, v+(spriteHeight),
+        u+spriteWidth, v+(spriteHeight),
+        u, v,
+        u+spriteWidth, v+(spriteHeight),
+        u+spriteWidth, v
+    };
+    
+    glUseProgram(program->programID);
+    glVertexAttribPointer(program->positionAttribute, 2, GL_FLOAT, false, 0, vertexData);
+    glEnableVertexAttribArray(program->positionAttribute);
+    glVertexAttribPointer(program->texCoordAttribute, 2, GL_FLOAT, false, 0, texCoordData);
+    glEnableVertexAttribArray(program->texCoordAttribute);
+    program->setModelMatrix(modelMatrix);
+    modelMatrix.identity();
+    glBindTexture(GL_TEXTURE_2D, textureID);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glDisableVertexAttribArray(program->positionAttribute);
+    glDisableVertexAttribArray(program->texCoordAttribute);
+    
+}
 
 void Entity::Render(Matrix &modelMatrix){
     sprite->renderGraphics(modelMatrix,*this);
