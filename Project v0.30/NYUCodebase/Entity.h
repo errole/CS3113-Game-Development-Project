@@ -44,9 +44,9 @@ public:
     Entity(float x, float y, UnitType unitType, Fraction fraction, SheetSprite &sprite);
     
     void Render(Matrix &modelMatrix);
-    bool checkOccupation(vector<Entity> &units);
+    bool checkCollision(vector<Entity> &units);
     float distance(Entity *other);
-    void rechargeMovement();
+    void rechargeUnit();
     void attack(Entity *other);
     void playAttackMusic(UnitType unitType);
     
@@ -54,7 +54,7 @@ public:
     float y;
     int index;
     SheetSprite *sprite;
-    bool canAttack;
+    bool canAttack=true;
     
     float baseHealth=10;
     float baseDamage=5;
