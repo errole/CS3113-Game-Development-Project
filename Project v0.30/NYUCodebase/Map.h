@@ -48,9 +48,8 @@ public:
     void renderLevel(ShaderProgram *program, GLuint mapTexture, Matrix &modelMatrix);
     void worldToTileCoordinates(float worldX, float worldY, int *gridX, int *gridY);
     void tileToWorldCoordinates(int gridX, int gridY, float *worldX, float *worldY);
-    bool bottomCollision(Entity *player);
-    bool RightCollision(Entity *player);
-    bool LeftCollision(Entity *player);
+    bool mapCollision(Entity *player);
+    
 private:
     void placeEntity(string type,float placeX,float &placeY, Entity &player);
 };

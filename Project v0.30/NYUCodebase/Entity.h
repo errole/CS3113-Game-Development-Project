@@ -50,8 +50,8 @@ public:
     void attack(Entity *other);
     void playAttackMusic(UnitType unitType);
     
-    float x;
-    float y;
+    int x;
+    int y;
     int index;
     SheetSprite *sprite;
     bool canAttack;

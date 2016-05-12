@@ -60,7 +60,7 @@ bool Map::readLayerData(std::ifstream &stream) {
                     if(val > 0) {
                         // be careful, the tiles in this format are indexed from 1 not 0
                         levelData[y][x] = val-1;
-                        //cout << " " << (int)val<<" ";
+                        //cout << " " << (int)val-1<<" ";
                     } else {
                         levelData[y][x] = 0;
                     }
@@ -222,3 +222,15 @@ void Map::tileToWorldCoordinates(int gridX, int gridY, float *worldX, float *wor
     *worldX = (float)(gridX * TILE_SIZE);
     *worldY = (float)(-gridY * TILE_SIZE);
 }
+
+bool Map::mapCollision(Entity *player){
+    vector<int> block={10,11,12,30,31,32,50,51,52};
+    for(int i=0;i<block.size();i++){
+        if(levelData[player->y][player->x]==block[i]){
+            cout <<levelData[player->y][player->x];
+            return true;
+        }
+    }
+    return false;
+}
+

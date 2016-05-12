@@ -318,6 +318,7 @@ int main(int argc, char *argv[])
     allUnits.push_back(unit6);
     allUnits.push_back(unit7);
     int playerTurn = 1;
+    
     while (!done) {
         while (SDL_PollEvent(&event)) {
             
@@ -345,10 +346,24 @@ int main(int argc, char *argv[])
                 done = true;
             }
             else if (event.type == SDL_KEYDOWN) {
+                
+                if (keys[SDL_SCANCODE_W] && selectionWindow->y > 0) {
+                    selectionWindow->y -= 1;
+                }
+                if (keys[SDL_SCANCODE_S] && selectionWindow->y < level.mapHeight - 1) {
+                    selectionWindow->y += 1;
+                }
+                if (keys[SDL_SCANCODE_D] && selectionWindow->x < level.mapWidth - 1) {
+                    selectionWindow->x += 1;
+                }
+                if (keys[SDL_SCANCODE_A] && selectionWindow->x > 0) {
+                    selectionWindow->x -= 1;
+                }
+                
                 //Allow Player to Select Own Units and then 2nd time is movement
                 if (keys[SDL_SCANCODE_X]){
                     if ( moveWindowOn == true){
-                        if (selectionWindow->checkOccupation(allUnits) && unitSelected->distance(selectionWindow) <= unitSelected->baseMovement) {
+                        if (selectionWindow->checkOccupation(allUnits) && unitSelected->distance(selectionWindow) <= unitSelected->baseMovement && !level.mapCollision(selectionWindow)) {
                             unitSelected->baseMovement -= unitSelected->distance(selectionWindow);
                             unitSelected->x = selectionWindow->x;
                             unitSelected->y = selectionWindow->y;
@@ -367,19 +382,8 @@ int main(int argc, char *argv[])
                         }
                     }
                 }
+                cout << level.mapCollision(selectionWindow);
                 //Shadow Box Movement Controls
-                if (keys[SDL_SCANCODE_W] && selectionWindow->y > 0) {
-                    selectionWindow->y -= 1;
-                }
-                if (keys[SDL_SCANCODE_S] && selectionWindow->y < level.mapHeight - 1) {
-                    selectionWindow->y += 1;
-                }
-                if (keys[SDL_SCANCODE_D] && selectionWindow->x < level.mapWidth - 1) {
-                    selectionWindow->x += 1;
-                }
-                if (keys[SDL_SCANCODE_A] && selectionWindow->x > 0) {
-                    selectionWindow->x -= 1;
-                }
                 if (keys[SDL_SCANCODE_RETURN]) {
                     cout << "Enter";
                     //Alternate Players
@@ -465,11 +469,7 @@ int main(int argc, char *argv[])
         glClear(GL_COLOR_BUFFER_BIT);
 
         
-        
         update();
-
-
-        
         
         
         SDL_GL_SwapWindow(displayWindow);
