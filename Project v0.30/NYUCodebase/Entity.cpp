@@ -126,7 +126,7 @@ Entity::Entity(float x, float y, UnitType unitType, Fraction fraction, SheetSpri
     else if(unitType==Selection){index=15;}
 }
 
-bool Entity::checkOccupation(vector<Entity> &units){
+bool Entity::checkCollision(vector<Entity> &units){
     for(int i=0;i<units.size();i++){
         if(units[i].x == this->x && units[i].y==this->y){
             return false;
@@ -155,14 +155,16 @@ void Entity::attack(Entity *other){
     }
     other->baseHealth= other->baseHealth-(this->baseDamage*damageModifier[j][i]);
     this->baseMovement=0;
+    this->canAttack=false;
 }
 
-void Entity::rechargeMovement(){
+void Entity::rechargeUnit(){
     for(int x=0; x < width-1; x++){
         if(unitType==movementModifier[0][x]){
             baseMovement= movementModifier[1][x];
         }
     }
+    this->canAttack=true;
 }
 
 void Entity::playAttackMusic(UnitType unitType){
