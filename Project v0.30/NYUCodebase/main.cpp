@@ -168,7 +168,7 @@ int main(int argc, char *argv[])
     Setup(*program);
     Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 4096 );
     Mix_Music *music;
-    music = Mix_LoadMUS("War Theme  America the Beautiful.mp3");
+    music = Mix_LoadMUS("ImperialMusic.mp3");
     Mix_PlayMusic(music, -1);
     
     

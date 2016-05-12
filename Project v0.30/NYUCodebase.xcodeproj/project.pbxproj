@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0AD552FB1CE3F2110075089E /* fire.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AD552F91CE3F2110075089E /* fire.png */; };
-		0AD552FC1CE3F2110075089E /* fire2.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AD552FA1CE3F2110075089E /* fire2.png */; };
 		6D5A86AE19AE5C710066C1FD /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D5A86AD19AE5C710066C1FD /* Cocoa.framework */; };
 		6D5A86B819AE5C710066C1FD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6D5A86B619AE5C710066C1FD /* InfoPlist.strings */; };
 		6D5A86BA19AE5C710066C1FD /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D5A86B919AE5C710066C1FD /* main.cpp */; };
@@ -30,13 +28,13 @@
 		D367A2461CE3E331006274F7 /* bullet.wav in Resources */ = {isa = PBXBuildFile; fileRef = D367A2451CE3E331006274F7 /* bullet.wav */; };
 		D36F41021C85E859009F70CC /* Entity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D36F41001C85E859009F70CC /* Entity.cpp */; };
 		D36F41051C85EC88009F70CC /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D36F41031C85EC88009F70CC /* Utilities.cpp */; };
-		D388AEBF1CD279BE00E5860E /* War Theme  America the Beautiful.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = D388AEBE1CD279BE00E5860E /* War Theme  America the Beautiful.mp3 */; };
 		D3D0A4C11CE441BA00F2DF9E /* Map.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D3D0A4BF1CE441BA00F2DF9E /* Map.cpp */; };
+		D3D0A4C51CE4427800F2DF9E /* fire.png in Resources */ = {isa = PBXBuildFile; fileRef = D3D0A4C31CE4427800F2DF9E /* fire.png */; };
+		D3D0A4C61CE4427800F2DF9E /* fire2.png in Resources */ = {isa = PBXBuildFile; fileRef = D3D0A4C41CE4427800F2DF9E /* fire2.png */; };
+		D3D0A4C81CE4428200F2DF9E /* ImperialMusic.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = D3D0A4C71CE4428200F2DF9E /* ImperialMusic.mp3 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0AD552F91CE3F2110075089E /* fire.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fire.png; sourceTree = "<group>"; };
-		0AD552FA1CE3F2110075089E /* fire2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fire2.png; sourceTree = "<group>"; };
 		6D5A86AA19AE5C710066C1FD /* NYUCodebase.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NYUCodebase.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D5A86AD19AE5C710066C1FD /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		6D5A86B019AE5C710066C1FD /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -69,9 +67,11 @@
 		D36F41011C85E859009F70CC /* Entity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Entity.h; sourceTree = "<group>"; };
 		D36F41031C85EC88009F70CC /* Utilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Utilities.cpp; sourceTree = "<group>"; };
 		D36F41041C85EC88009F70CC /* Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utilities.h; sourceTree = "<group>"; };
-		D388AEBE1CD279BE00E5860E /* War Theme  America the Beautiful.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "War Theme  America the Beautiful.mp3"; path = "resources/War Theme  America the Beautiful.mp3"; sourceTree = SOURCE_ROOT; };
 		D3D0A4BF1CE441BA00F2DF9E /* Map.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Map.cpp; sourceTree = "<group>"; };
 		D3D0A4C01CE441BA00F2DF9E /* Map.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Map.h; sourceTree = "<group>"; };
+		D3D0A4C31CE4427800F2DF9E /* fire.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fire.png; path = resources/fire.png; sourceTree = SOURCE_ROOT; };
+		D3D0A4C41CE4427800F2DF9E /* fire2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fire2.png; path = resources/fire2.png; sourceTree = SOURCE_ROOT; };
+		D3D0A4C71CE4428200F2DF9E /* ImperialMusic.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = ImperialMusic.mp3; path = resources/ImperialMusic.mp3; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -194,10 +194,10 @@
 		D3D0A4C21CE441D600F2DF9E /* resources */ = {
 			isa = PBXGroup;
 			children = (
-				0AD552F91CE3F2110075089E /* fire.png */,
-				0AD552FA1CE3F2110075089E /* fire2.png */,
+				D3D0A4C71CE4428200F2DF9E /* ImperialMusic.mp3 */,
+				D3D0A4C31CE4427800F2DF9E /* fire.png */,
+				D3D0A4C41CE4427800F2DF9E /* fire2.png */,
 				D367A2451CE3E331006274F7 /* bullet.wav */,
-				D388AEBE1CD279BE00E5860E /* War Theme  America the Beautiful.mp3 */,
 				D34FAAEB1CD1ADD8007C4DBB /* gamemap1.txt */,
 				D34FAAE61CD1AB62007C4DBB /* Map_units.png */,
 				D34FAAE71CD1AB62007C4DBB /* RPGpack_sheet.png */,
@@ -258,17 +258,17 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0AD552FB1CE3F2110075089E /* fire.png in Resources */,
 				D34FAAEA1CD1AB62007C4DBB /* RPGpack_sheet.png in Resources */,
 				6D5A86B819AE5C710066C1FD /* InfoPlist.strings in Resources */,
 				D367A2461CE3E331006274F7 /* bullet.wav in Resources */,
-				0AD552FC1CE3F2110075089E /* fire2.png in Resources */,
-				D388AEBF1CD279BE00E5860E /* War Theme  America the Beautiful.mp3 in Resources */,
+				D3D0A4C61CE4427800F2DF9E /* fire2.png in Resources */,
 				6DEF23C11B96CC2600BCE792 /* fragment.glsl in Resources */,
 				6DE9D2F11BA6AB8C002D599C /* fragment_textured.glsl in Resources */,
 				6D5A86C619AE5C710066C1FD /* Images.xcassets in Resources */,
+				D3D0A4C81CE4428200F2DF9E /* ImperialMusic.mp3 in Resources */,
 				D34FAAEC1CD1ADD8007C4DBB /* gamemap1.txt in Resources */,
 				D34FAAE91CD1AB62007C4DBB /* Map_units.png in Resources */,
+				D3D0A4C51CE4427800F2DF9E /* fire.png in Resources */,
 				6D5A86BE19AE5C710066C1FD /* Credits.rtf in Resources */,
 				6DEF23C41B96CC2600BCE792 /* vertex.glsl in Resources */,
 				6DC7076A1BA7273500225B7D /* vertex_textured.glsl in Resources */,
