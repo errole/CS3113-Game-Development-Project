@@ -1,0 +1,8 @@
+class Mesh {
+public:
+void Render(ShaderProgram *program);
+void loadOBJ(const char *fileName);
+std::vector<float> vertices;
+std::vector<float> uvs;
+std::vector<float> normals;
+};
