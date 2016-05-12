@@ -7,7 +7,7 @@
 //
 
 #include "Map.h"
-
+//Remember the index starts with 0 aka delete 1
 vector<int> arrBlock = {10,11,12,30,31,32};
 
 bool Map::readHeader(std::ifstream &stream) {
