@@ -29,8 +29,8 @@ using namespace std;
 class Map{
 public:
     //Map Data
-    int** levelData;
-    int** levelData2;
+    unsigned char** levelData;
+    unsigned char** levelData2;
     float TILE_SIZE = 0.3f;
     int mapWidth;
     int mapHeight;
@@ -48,8 +48,9 @@ public:
     void renderLevel(ShaderProgram *program, GLuint mapTexture, Matrix &modelMatrix);
     void worldToTileCoordinates(float worldX, float worldY, int *gridX, int *gridY);
     void tileToWorldCoordinates(int gridX, int gridY, float *worldX, float *worldY);
-    bool collision(Entity *player);
-
+    bool bottomCollision(Entity *player);
+    bool RightCollision(Entity *player);
+    bool LeftCollision(Entity *player);
 private:
     void placeEntity(string type,float placeX,float &placeY, Entity &player);
 };

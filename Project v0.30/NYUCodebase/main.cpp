@@ -348,15 +348,13 @@ int main(int argc, char *argv[])
                 //Allow Player to Select Own Units and then 2nd time is movement
                 if (keys[SDL_SCANCODE_X]){
                     if ( moveWindowOn == true){
-                        if (selectionWindow->checkCollision(allUnits) && unitSelected->distance(selectionWindow) <= unitSelected->baseMovement && !level.collision(selectionWindow)) {
+                        if (selectionWindow->checkOccupation(allUnits) && unitSelected->distance(selectionWindow) <= unitSelected->baseMovement) {
                             unitSelected->baseMovement -= unitSelected->distance(selectionWindow);
                             unitSelected->x = selectionWindow->x;
                             unitSelected->y = selectionWindow->y;
                             moveWindowOn = false;
-                            cout << level.levelData[(int)selectionWindow->y][(int)selectionWindow->x];
                         }
                     }
-                    
                     else {
                         for(int i = 0; i < allUnits.size(); i++) {
                             if (allUnits[i].x == selectionWindow->x && allUnits[i].y == selectionWindow->y && allUnits[i].fraction == playerTurn && allUnits[i].baseMovement > 0) {
@@ -389,10 +387,10 @@ int main(int argc, char *argv[])
                     if (playerTurn > 2) {
                         playerTurn = 1;
                     }
-                    //Recharge all attributes
+                    //Recharge all Movement
                     for(int i = 0; i < allUnits.size(); i++) {
                         if (playerTurn == allUnits[i].fraction) {
-                            allUnits[i].rechargeUnit();
+                            allUnits[i].rechargeMovement();
                         }
                     }
                 }
@@ -413,7 +411,7 @@ int main(int argc, char *argv[])
                     }
                     else {
                         for(int i = 0; i < allUnits.size(); i++) {
-                            if(allUnits[i].x == selectionWindow->x && allUnits[i].y == selectionWindow->y && allUnits[i].fraction == playerTurn && allUnits[i].canAttack) {
+                            if(allUnits[i].x == selectionWindow->x && allUnits[i].y == selectionWindow->y && allUnits[i].fraction == playerTurn) {
                                 warWindowOn = true;
                                 unitSelected = &allUnits[i];
                                 warWindow->x = unitSelected->x;
@@ -465,8 +463,14 @@ int main(int argc, char *argv[])
         //Background color
         glClearColor(0.53f, 0.808f, 0.98f, 0.1f);
         glClear(GL_COLOR_BUFFER_BIT);
+
+        
         
         update();
+
+
+        
+        
         
         SDL_GL_SwapWindow(displayWindow);
         

@@ -7,8 +7,6 @@
 //
 
 #include "Map.h"
-//Remember the index starts with 0 aka delete 1
-vector<int> arrBlock = {10,11,12,30,31,32};
 
 bool Map::readHeader(std::ifstream &stream) {
     string line;
@@ -30,13 +28,13 @@ bool Map::readHeader(std::ifstream &stream) {
     if(mapWidth == -1 || mapHeight == -1) {
         return false;
     } else { // allocate our map data
-        levelData = new int *[mapHeight];
+        levelData = new unsigned char*[mapHeight];
         for(int i = 0; i < mapHeight; ++i) {
-            levelData[i] = new int[mapWidth];
+            levelData[i] = new unsigned char[mapWidth];
         }
-        levelData2 = new int*[mapHeight];
+        levelData2 = new unsigned char*[mapHeight];
         for(int i = 0; i < mapHeight; ++i) {
-            levelData2[i] = new int[mapWidth];
+            levelData2[i] = new unsigned char[mapWidth];
         }
         return true;
     }
@@ -224,13 +222,3 @@ void Map::tileToWorldCoordinates(int gridX, int gridY, float *worldX, float *wor
     *worldX = (float)(gridX * TILE_SIZE);
     *worldY = (float)(-gridY * TILE_SIZE);
 }
-
-bool Map::collision(Entity *player){
-    for(int i = 0;i<arrBlock.size();i++){
-        if(levelData[(int)player->y][(int)player->x]==arrBlock[i]){
-            return true;
-        };
-    }
-    return false;
-}
-
