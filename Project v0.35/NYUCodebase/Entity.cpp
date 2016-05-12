@@ -173,3 +173,16 @@ void Entity::playAttackMusic(UnitType unitType){
     }
 }
 
+void Entity::shadeRange(SheetSprite *sheet,Matrix &modelMatrix){
+    int max1=x+baseMovement;
+    int max2=x-baseMovement;
+    int max3=y+baseMovement;
+    int max4=y-baseMovement;
+    for(int j=0;j<max1;j++){
+        for(int i=0;i<max3;i++){
+            sheet->renderGraphics(modelMatrix, x+i, y+j, 15);
+        }
+    }
+}
+
+

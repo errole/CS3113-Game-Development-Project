@@ -42,6 +42,7 @@
 		D3D0A4C51CE4427800F2DF9E /* fire.png in Resources */ = {isa = PBXBuildFile; fileRef = D3D0A4C31CE4427800F2DF9E /* fire.png */; };
 		D3D0A4C61CE4427800F2DF9E /* fire2.png in Resources */ = {isa = PBXBuildFile; fileRef = D3D0A4C41CE4427800F2DF9E /* fire2.png */; };
 		D3D0A4C81CE4428200F2DF9E /* ImperialMusic.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = D3D0A4C71CE4428200F2DF9E /* ImperialMusic.mp3 */; };
+		D3D787981CE528A2001EE694 /* mesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D3D787961CE528A2001EE694 /* mesh.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -104,6 +105,8 @@
 		D3D0A4C31CE4427800F2DF9E /* fire.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fire.png; path = resources/fire.png; sourceTree = SOURCE_ROOT; };
 		D3D0A4C41CE4427800F2DF9E /* fire2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fire2.png; path = resources/fire2.png; sourceTree = SOURCE_ROOT; };
 		D3D0A4C71CE4428200F2DF9E /* ImperialMusic.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = ImperialMusic.mp3; path = resources/ImperialMusic.mp3; sourceTree = SOURCE_ROOT; };
+		D3D787961CE528A2001EE694 /* mesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mesh.cpp; sourceTree = "<group>"; };
+		D3D787971CE528A2001EE694 /* mesh.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = mesh.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -219,6 +222,8 @@
 				D3D0A4BF1CE441BA00F2DF9E /* Map.cpp */,
 				D3D0A4C01CE441BA00F2DF9E /* Map.h */,
 				6D5A86B919AE5C710066C1FD /* main.cpp */,
+				D3D787961CE528A2001EE694 /* mesh.cpp */,
+				D3D787971CE528A2001EE694 /* mesh.hpp */,
 			);
 			name = Code;
 			sourceTree = "<group>";
@@ -331,6 +336,7 @@
 				6D5A86BA19AE5C710066C1FD /* main.cpp in Sources */,
 				D3D0A4C11CE441BA00F2DF9E /* Map.cpp in Sources */,
 				D36F41051C85EC88009F70CC /* Utilities.cpp in Sources */,
+				D3D787981CE528A2001EE694 /* mesh.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

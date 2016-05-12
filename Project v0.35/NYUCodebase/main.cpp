@@ -14,7 +14,7 @@
 #include "Utilities.h"
 #include "Map.h"
 #include <map>
-
+#include "mesh.hpp"
 using namespace std;
 
 #ifdef _WINDOWS
@@ -70,79 +70,6 @@ Entity *warWindow;
 Map level;
 vector<Entity> allUnits;
 
-class Mesh {
-public:
-    void Render(ShaderProgram *program);
-    void loadOBJ(const char *fileName);
-    std::vector<float> vertices;
-    std::vector<float> uvs;
-    std::vector<float> normals;
-};
-
-void Mesh::loadOBJ(const char *fileName) {
-    ifstream infile(fileName);
-    string line;
-    std::vector<float> fileVertices;
-    std::vector<float> fileUVs;
-    std::vector<float> fileNormals;
-    while (getline(infile, line)) {
-        istringstream sStream(line);
-        string token;
-        getline(sStream, token, ' ');
-        if (token == "v") {
-            while (getline(sStream, token, ' ')) {
-                fileVertices.push_back(atof(token.c_str()));
-            }
-        }
-        else if (token == "vn") {
-            while (getline(sStream, token, ' ')) {
-                fileNormals.push_back(atof(token.c_str()));
-            }
-        }
-        else if (token == "vt") {
-            while (getline(sStream, token, ' ')) {
-                fileUVs.push_back(atof(token.c_str()));
-            }
-        }
-        else if (token == "f") {
-            while (getline(sStream, token, ' ')) {
-                istringstream faceStream(token);
-                string faceToken;
-                int type = 0;
-                while (getline(faceStream, faceToken, '/')) {
-                    int index = atoi(faceToken.c_str()) - 1;
-                    switch (type) {
-                        case 0:
-                            vertices.push_back(fileVertices[index * 3]);
-                            vertices.push_back(fileVertices[(index * 3) + 1]);
-                            vertices.push_back(fileVertices[(index * 3) + 2]);
-                            break;
-                        case 1:
-                            uvs.push_back(fileUVs[(index * 2)]);
-                            uvs.push_back(1.0f - fileUVs[(index * 2) + 1]);
-                            break;
-                        case 2:
-                            normals.push_back(fileNormals[(index * 3)]);
-                            normals.push_back(fileNormals[(index * 3) + 1]);
-                            normals.push_back(fileNormals[(index * 3) + 2]);
-                            break;
-                    }
-                    type++;
-                }
-            }
-        }
-    }
-}
-
-void Mesh::Render(ShaderProgram *program) {
-    glVertexAttribPointer(program->positionAttribute, 3, GL_FLOAT, false, 0, vertices.data());
-    glEnableVertexAttribArray(program->positionAttribute);
-    glVertexAttribPointer(program->texCoordAttribute, 2, GL_FLOAT, false, 0, uvs.data());
-    glEnableVertexAttribArray(program->texCoordAttribute);
-    glDrawArrays(GL_TRIANGLES, 0, vertices.size() / 3);
-    glDisableVertexAttribArray(program->positionAttribute);
-    glDisableVertexAttribArray(program->texCoordAttribute);
-}
 
 void Setup (ShaderProgram &program, string file) {
     //Load Map File
@@ -375,30 +302,13 @@ int main(int argc, char *argv[])
                             if (allUnits[i].x == selectionWindow->x && allUnits[i].y == selectionWindow->y && allUnits[i].fraction == playerTurn && allUnits[i].baseMovement > 0) {
                                 moveWindowOn = true;
                                 unitSelected = &allUnits[i];
-                                cout << unitSelected->baseMovement;
+                                //cout << unitSelected->baseMovement;
                                 moveWindow->x = unitSelected->x;
                                 moveWindow->y = unitSelected->y;
                             }
                         }
                     }
                 }
-                cout << level.mapCollision(selectionWindow);
-                //Shadow Box Movement Controls
-                if (keys[SDL_SCANCODE_RETURN]) {
-                    cout << "Enter";
-                    //Alternate Players
-                    playerTurn += 1;
-                    if (playerTurn > 2) {
-                        playerTurn = 1;
-                    }
-                    //Recharge all Movement
-                    for(int i = 0; i < allUnits.size(); i++) {
-                        if (playerTurn == allUnits[i].fraction) {
-                            allUnits[i].rechargeMovement();
-                        }
-                    }
-                }
-                
                 //Enter Attack Mode
                 if(keys[SDL_SCANCODE_Z]) {
                     if(warWindowOn == true) {
@@ -421,6 +331,22 @@ int main(int argc, char *argv[])
                                 warWindow->x = unitSelected->x;
                                 warWindow->y = unitSelected->y;
                             }
+                        }
+                    }
+                }
+                //cout << level.mapCollision(selectionWindow);
+                //Shadow Box Movement Controls
+                if (keys[SDL_SCANCODE_RETURN]) {
+                    cout << "Enter";
+                    //Alternate Players
+                    playerTurn += 1;
+                    if (playerTurn > 2) {
+                        playerTurn = 1;
+                    }
+                    //Recharge all Movement
+                    for(int i = 0; i < allUnits.size(); i++) {
+                        if (playerTurn == allUnits[i].fraction) {
+                            allUnits[i].rechargeMovement();
                         }
                     }
                 }

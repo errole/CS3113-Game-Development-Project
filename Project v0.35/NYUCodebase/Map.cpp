@@ -227,7 +227,6 @@ bool Map::mapCollision(Entity *player){
     vector<int> block={10,11,12,30,31,32,50,51,52};
     for(int i=0;i<block.size();i++){
         if(levelData[player->y][player->x]==block[i]){
-            cout <<levelData[player->y][player->x];
             return true;
         }
     }
