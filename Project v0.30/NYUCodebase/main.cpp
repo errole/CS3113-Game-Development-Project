@@ -34,15 +34,16 @@ const Uint8 *keys = SDL_GetKeyboardState(NULL);
 ShaderProgram* program;
 GLuint mapTexture = 0;
 GLuint unitTexture = 0;
+
 string levelFileOne = "gamemap1.txt";
 string levelFileTwo = "gamemap2.txt";
 string levelFileThree = "gamemap3.txt";
-int redPlayer = 0;
-int bluePlayer = 0;
+int redPlayerKills = 0;
+int bluePlayerKills = 0;
 
 //Game States
 enum GameState {
-    STATE_MAIN_MENU, STATE_GAME_LEVEL_1, STATE_GAME_LEVEL_2, STATE_GAME_LEVEL_3, STATE_WIN, STATE_LOSE
+    STATE_MAIN_MENU, STATE_GAME_LEVEL_1, STATE_GAME_LEVEL_2, STATE_GAME_LEVEL_3, STATE_OVER
 };
 int state = STATE_MAIN_MENU;
 
@@ -216,10 +217,12 @@ int death =0;
 
 void update() {
     switch(state) {
-        case STATE_LOSE:
-
-            break;
+        case STATE_OVER: {
+            state = STATE_MAIN_MENU;
+        }
         case STATE_MAIN_MENU: {
+            GLuint fontSheet = LoadTexture("font1.png");
+            DrawText(program, fontSheet, "Primitve Wars", 0.5f, -0.25f);
             Mesh tank;
             tank.loadOBJ("T-90.obj");
             GLuint st = LoadTexture("purple.png");
@@ -296,15 +299,15 @@ int main(int argc, char *argv[])
     
     //Add Units
     Entity unit(0, 20, Inf, Red, unitSprite);
-    Entity unit1(0, 21, Inf, Red, unitSprite);
-    Entity unit2(0, 22, Inf, Red, unitSprite);
-    Entity unit3(0, 23, Inf, Red, unitSprite);
+    Entity unit1(0, 21, APC, Red, unitSprite);
+    Entity unit2(0, 22, ATInf, Red, unitSprite);
+    Entity unit3(0, 23, LTank, Red, unitSprite);
     
     
-    Entity unit4(20, 1, APC, Blue, unitSprite);
+    Entity unit4(20, 1, Inf, Blue, unitSprite);
     Entity unit5(20, 2, APC, Blue, unitSprite);
-    Entity unit6(20, 3, APC, Blue, unitSprite);
-    Entity unit7(20, 4, APC, Blue, unitSprite);
+    Entity unit6(20, 3, ATInf, Blue, unitSprite);
+    Entity unit7(20, 4, LTank, Blue, unitSprite);
     
     allUnits.push_back(unit);
     allUnits.push_back(unit1);
@@ -317,6 +320,7 @@ int main(int argc, char *argv[])
     int playerTurn = 1;
     while (!done) {
         while (SDL_PollEvent(&event)) {
+            
             if (state == STATE_MAIN_MENU) {
                 if (keys[SDL_SCANCODE_Q]) {
                     state = STATE_GAME_LEVEL_1;
@@ -337,7 +341,7 @@ int main(int argc, char *argv[])
                 Setup(*program, levelFileThree);
             }
 
-            if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE) {
+            if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE || keys[SDL_SCANCODE_ESCAPE]) {
                 done = true;
             }
             else if (event.type == SDL_KEYDOWN) {
@@ -430,12 +434,22 @@ int main(int argc, char *argv[])
                     death++;
                 }
                 else{
+                    if (allUnits[i].fraction == Red) {
+                        redPlayerKills++;
+                    }
+                    if (allUnits[i].fraction == Blue) {
+                        bluePlayerKills++;
+                    }
                     allUnits.erase(allUnits.begin() + i);
                 }
             }
         }
         
-
+        if (redPlayerKills == 1 || bluePlayerKills == 1 ) {
+            state = STATE_OVER;
+        }
+        
+        
         ticks = (float)SDL_GetTicks()/1000.0f;
         float elapsed = ticks - lastFrameTicks;
         lastFrameTicks = ticks;
