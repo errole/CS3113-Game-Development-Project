@@ -23,7 +23,6 @@
 		6DEF23C21B96CC2600BCE792 /* Matrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6DEF23BC1B96CC2600BCE792 /* Matrix.cpp */; };
 		6DEF23C31B96CC2600BCE792 /* ShaderProgram.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6DEF23BE1B96CC2600BCE792 /* ShaderProgram.cpp */; };
 		6DEF23C41B96CC2600BCE792 /* vertex.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 6DEF23C01B96CC2600BCE792 /* vertex.glsl */; };
-		D301F8E11CAA3B260077848D /* Map.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D301F8DF1CAA3B260077848D /* Map.cpp */; };
 		D3127D8F1C9261A800B3B03A /* SDL2_mixer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3127D8E1C9261A800B3B03A /* SDL2_mixer.framework */; };
 		D34FAAE91CD1AB62007C4DBB /* Map_units.png in Resources */ = {isa = PBXBuildFile; fileRef = D34FAAE61CD1AB62007C4DBB /* Map_units.png */; };
 		D34FAAEA1CD1AB62007C4DBB /* RPGpack_sheet.png in Resources */ = {isa = PBXBuildFile; fileRef = D34FAAE71CD1AB62007C4DBB /* RPGpack_sheet.png */; };
@@ -32,6 +31,7 @@
 		D36F41021C85E859009F70CC /* Entity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D36F41001C85E859009F70CC /* Entity.cpp */; };
 		D36F41051C85EC88009F70CC /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D36F41031C85EC88009F70CC /* Utilities.cpp */; };
 		D388AEBF1CD279BE00E5860E /* War Theme  America the Beautiful.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = D388AEBE1CD279BE00E5860E /* War Theme  America the Beautiful.mp3 */; };
+		D3D0A4C11CE441BA00F2DF9E /* Map.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D3D0A4BF1CE441BA00F2DF9E /* Map.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -60,8 +60,6 @@
 		6DEF23BE1B96CC2600BCE792 /* ShaderProgram.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ShaderProgram.cpp; sourceTree = "<group>"; };
 		6DEF23BF1B96CC2600BCE792 /* ShaderProgram.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShaderProgram.h; sourceTree = "<group>"; };
 		6DEF23C01B96CC2600BCE792 /* vertex.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = vertex.glsl; sourceTree = "<group>"; };
-		D301F8DF1CAA3B260077848D /* Map.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Map.cpp; sourceTree = SOURCE_ROOT; };
-		D301F8E01CAA3B260077848D /* Map.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Map.h; sourceTree = SOURCE_ROOT; };
 		D3127D8E1C9261A800B3B03A /* SDL2_mixer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_mixer.framework; path = ../../../../../../../../Library/Frameworks/SDL2_mixer.framework; sourceTree = "<group>"; };
 		D34FAAE61CD1AB62007C4DBB /* Map_units.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Map_units.png; path = resources/Map_units.png; sourceTree = SOURCE_ROOT; };
 		D34FAAE71CD1AB62007C4DBB /* RPGpack_sheet.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = RPGpack_sheet.png; path = resources/RPGpack_sheet.png; sourceTree = SOURCE_ROOT; };
@@ -72,6 +70,8 @@
 		D36F41031C85EC88009F70CC /* Utilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Utilities.cpp; sourceTree = "<group>"; };
 		D36F41041C85EC88009F70CC /* Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utilities.h; sourceTree = "<group>"; };
 		D388AEBE1CD279BE00E5860E /* War Theme  America the Beautiful.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "War Theme  America the Beautiful.mp3"; path = "resources/War Theme  America the Beautiful.mp3"; sourceTree = SOURCE_ROOT; };
+		D3D0A4BF1CE441BA00F2DF9E /* Map.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Map.cpp; sourceTree = "<group>"; };
+		D3D0A4C01CE441BA00F2DF9E /* Map.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Map.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -134,6 +134,7 @@
 		6D5A86B319AE5C710066C1FD /* NYUCodebase */ = {
 			isa = PBXGroup;
 			children = (
+				D3D0A4C21CE441D600F2DF9E /* resources */,
 				6D5A86E119AE5CAA0066C1FD /* Code */,
 				6D5A86B419AE5C710066C1FD /* Supporting Files */,
 			);
@@ -171,13 +172,6 @@
 		6D5A86E119AE5CAA0066C1FD /* Code */ = {
 			isa = PBXGroup;
 			children = (
-				0AD552F91CE3F2110075089E /* fire.png */,
-				0AD552FA1CE3F2110075089E /* fire2.png */,
-				D367A2451CE3E331006274F7 /* bullet.wav */,
-				D388AEBE1CD279BE00E5860E /* War Theme  America the Beautiful.mp3 */,
-				D34FAAEB1CD1ADD8007C4DBB /* gamemap1.txt */,
-				D34FAAE61CD1AB62007C4DBB /* Map_units.png */,
-				D34FAAE71CD1AB62007C4DBB /* RPGpack_sheet.png */,
 				6DEF23BB1B96CC2600BCE792 /* fragment.glsl */,
 				6DE9D2F01BA6AB8C002D599C /* fragment_textured.glsl */,
 				6DC707691BA7273500225B7D /* vertex_textured.glsl */,
@@ -190,11 +184,25 @@
 				D36F41011C85E859009F70CC /* Entity.h */,
 				D36F41031C85EC88009F70CC /* Utilities.cpp */,
 				D36F41041C85EC88009F70CC /* Utilities.h */,
-				D301F8DF1CAA3B260077848D /* Map.cpp */,
-				D301F8E01CAA3B260077848D /* Map.h */,
+				D3D0A4BF1CE441BA00F2DF9E /* Map.cpp */,
+				D3D0A4C01CE441BA00F2DF9E /* Map.h */,
 				6D5A86B919AE5C710066C1FD /* main.cpp */,
 			);
 			name = Code;
+			sourceTree = "<group>";
+		};
+		D3D0A4C21CE441D600F2DF9E /* resources */ = {
+			isa = PBXGroup;
+			children = (
+				0AD552F91CE3F2110075089E /* fire.png */,
+				0AD552FA1CE3F2110075089E /* fire2.png */,
+				D367A2451CE3E331006274F7 /* bullet.wav */,
+				D388AEBE1CD279BE00E5860E /* War Theme  America the Beautiful.mp3 */,
+				D34FAAEB1CD1ADD8007C4DBB /* gamemap1.txt */,
+				D34FAAE61CD1AB62007C4DBB /* Map_units.png */,
+				D34FAAE71CD1AB62007C4DBB /* RPGpack_sheet.png */,
+			);
+			name = resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -274,11 +282,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D301F8E11CAA3B260077848D /* Map.cpp in Sources */,
 				D36F41021C85E859009F70CC /* Entity.cpp in Sources */,
 				6DEF23C31B96CC2600BCE792 /* ShaderProgram.cpp in Sources */,
 				6DEF23C21B96CC2600BCE792 /* Matrix.cpp in Sources */,
 				6D5A86BA19AE5C710066C1FD /* main.cpp in Sources */,
+				D3D0A4C11CE441BA00F2DF9E /* Map.cpp in Sources */,
 				D36F41051C85EC88009F70CC /* Utilities.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
