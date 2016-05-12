@@ -68,7 +68,7 @@ vector<Entity> allUnits;
 
 void Setup (ShaderProgram &program) {
     //Load Map File
-    string levelFileOne = "/Users/errolelbasan/Documents/Codes/Game-Development-Project/Project v0.25/resources/gamemap1.txt";
+    string levelFileOne = "/Users/Kevin/Desktop/Stuff/NYU-Poly/CS3113/Final/CS3113-Game-Development-Project/Project v0.25/resources/gamemap1.txt";
     ifstream infile(levelFileOne);
     string line;
     while (getline(infile, line)) {

@@ -26,7 +26,7 @@ using namespace std;
 // 60 FPS (1.0f/60.0f)
 #define FIXED_TIMESTEP 0.0166666f
 #define MAX_TIMESTEPS 6
-
+float ticks;
 //Global Setup Parameters
 SDL_Window* displayWindow;
 unsigned char** levelData;
@@ -38,7 +38,7 @@ GLuint unitTexture = 0;
 
 //Game States
 enum GameState {
-    STATE_MAIN_MENU, STATE_GAME_LEVEL, STATE_WIN, STATE_LOSE
+    STATE_MAIN_MENU, STATE_GAME_LEVEL_1, STATE_WIN, STATE_LOSE
 };
 int state = STATE_MAIN_MENU;
 
@@ -65,10 +65,83 @@ Entity *warWindow;
 Map level;
 vector<Entity> allUnits;
 
+class Mesh {
+public:
+    void Render(ShaderProgram *program);
+    void loadOBJ(const char *fileName);
+    std::vector<float> vertices;
+    std::vector<float> uvs;
+    std::vector<float> normals;
+};
+
+void Mesh::loadOBJ(const char *fileName) {
+    ifstream infile(fileName);
+    string line;
+    std::vector<float> fileVertices;
+    std::vector<float> fileUVs;
+    std::vector<float> fileNormals;
+    while (getline(infile, line)) {
+        istringstream sStream(line);
+        string token;
+        getline(sStream, token, ' ');
+        if (token == "v") {
+            while (getline(sStream, token, ' ')) {
+                fileVertices.push_back(atof(token.c_str()));
+            }
+        }
+        else if (token == "vn") {
+            while (getline(sStream, token, ' ')) {
+                fileNormals.push_back(atof(token.c_str()));
+            }
+        }
+        else if (token == "vt") {
+            while (getline(sStream, token, ' ')) {
+                fileUVs.push_back(atof(token.c_str()));
+            }
+        }
+        else if (token == "f") {
+            while (getline(sStream, token, ' ')) {
+                istringstream faceStream(token);
+                string faceToken;
+                int type = 0;
+                while (getline(faceStream, faceToken, '/')) {
+                    int index = atoi(faceToken.c_str()) - 1;
+                    switch (type) {
+                        case 0:
+                            vertices.push_back(fileVertices[index * 3]);
+                            vertices.push_back(fileVertices[(index * 3) + 1]);
+                            vertices.push_back(fileVertices[(index * 3) + 2]);
+                            break;
+                        case 1:
+                            uvs.push_back(fileUVs[(index * 2)]);
+                            uvs.push_back(1.0f - fileUVs[(index * 2) + 1]);
+                            break;
+                        case 2:
+                            normals.push_back(fileNormals[(index * 3)]);
+                            normals.push_back(fileNormals[(index * 3) + 1]);
+                            normals.push_back(fileNormals[(index * 3) + 2]);
+                            break;
+                    }
+                    type++;
+                }
+            }
+        }
+    }
+}
+
+void Mesh::Render(ShaderProgram *program) {
+    glVertexAttribPointer(program->positionAttribute, 3, GL_FLOAT, false, 0, vertices.data());
+    glEnableVertexAttribArray(program->positionAttribute);
+    glVertexAttribPointer(program->texCoordAttribute, 2, GL_FLOAT, false, 0, uvs.data());
+    glEnableVertexAttribArray(program->texCoordAttribute);
+    glDrawArrays(GL_TRIANGLES, 0, vertices.size() / 3);
+    glDisableVertexAttribArray(program->positionAttribute);
+    glDisableVertexAttribArray(program->texCoordAttribute);
+}
 
 void Setup (ShaderProgram &program) {
     //Load Map File
-    string levelFileOne = "/Users/errolelbasan/Documents/Codes/Game-Development-Project/Project v0.25/resources/gamemap1.txt";
+    string levelFileOne = "gamemap1.txt";
     ifstream infile(levelFileOne);
     string line;
     while (getline(infile, line)) {
@@ -104,10 +177,6 @@ void RenderGameLevel(ShaderProgram &program, float elapsed) {
     viewMatrix.identity();
     viewMatrix.Scale(zoom, zoom, 0);
     viewMatrix.Translate(posX,posY,0);
-    //viewMatrix.Rotate(.3);
-    //viewMatrix.Pitch(elapsed/2);
-    //viewMatrix.Yaw(elapsed);
-    //cout << elapsed << endl;
     program.setViewMatrix(viewMatrix);
 
 }
@@ -115,6 +184,7 @@ void RenderGameLevel(ShaderProgram &program, float elapsed) {
 void UpdateGameLevel(ShaderProgram &program) {
     float screenMovement = 0.1;
     float zoomRes = 0.01;
+    
     //Zoom and Scroll Controls
     if (keys[SDL_SCANCODE_UP]) {
         posY -= screenMovement;
@@ -142,6 +212,41 @@ void UpdateGameLevel(ShaderProgram &program) {
 }
 
 int death =0;
+
+void update() {
+    switch(state) {
+        case STATE_WIN:
+
+            break;
+        case STATE_MAIN_MENU: {
+            Mesh tank;
+            tank.loadOBJ("T-90.obj");
+            GLuint st = LoadTexture("purple.png");
+            modelMatrix.identity();
+            modelMatrix.Translate(0, -1, 0);
+            modelMatrix.Yaw(ticks/15);
+            program->setModelMatrix(modelMatrix);
+            glBindTexture(GL_TEXTURE_2D,st);
+            viewMatrix.identity();
+            viewMatrix.Scale(0.3, 0.3, 0);
+            program->setViewMatrix(viewMatrix);
+            tank.Render(program);
+            break;
+        }
+        case STATE_GAME_LEVEL_1:
+            RenderGameLevel(*program, elapsed);
+            UpdateGameLevel(*program);
+            break;
+        
+    }
+}
+void processState() {
+    if (state == STATE_MAIN_MENU) {
+        if (keys[SDL_SCANCODE_P]) {
+            state = STATE_GAME_LEVEL_1;
+        }
+    }
+}
 
 int main(int argc, char *argv[])
 {
@@ -196,6 +301,12 @@ int main(int argc, char *argv[])
     int playerTurn = 1;
     while (!done) {
         while (SDL_PollEvent(&event)) {
+            if (state == STATE_MAIN_MENU) {
+                if (keys[SDL_SCANCODE_P]) {
+                    state = STATE_GAME_LEVEL_1;
+                    Mesh tank;
+                }
+            }
             if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE) {
                 done = true;
             }
@@ -277,6 +388,7 @@ int main(int argc, char *argv[])
                 }
             }
         }
+        
         for(int i = 0;i<allUnits.size(); i++) {
             if(allUnits[i].baseHealth <= 0) {
                 if(death % 4 == 0){
@@ -293,7 +405,7 @@ int main(int argc, char *argv[])
                 }
             }
         }
-        float ticks = (float)SDL_GetTicks()/1000.0f;
+        ticks = (float)SDL_GetTicks()/1000.0f;
         float elapsed = ticks - lastFrameTicks;
         lastFrameTicks = ticks;
         float fixedElapsed = elapsed;
@@ -306,9 +418,17 @@ int main(int argc, char *argv[])
         //Background color
         glClearColor(0.53f, 0.808f, 0.98f, 0.1f);
         glClear(GL_COLOR_BUFFER_BIT);
+
         
-        UpdateGameLevel(*program);
-        RenderGameLevel(*program, ticks);
+        
+        update();
+
+        
+        
+        
+        
+        
+        
         
         SDL_GL_SwapWindow(displayWindow);
         
