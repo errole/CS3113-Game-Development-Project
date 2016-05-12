@@ -224,7 +224,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = NYUCB;
-				LastUpgradeCheck = 0510;
+				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = "Ivan Safrin";
 			};
 			buildConfigurationList = 6D5A86A519AE5C710066C1FD /* Build configuration list for PBXProject "NYUCodebase" */;
@@ -330,6 +330,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -402,6 +403,7 @@
 					/Library/Frameworks/SDL2_mixer.framework/Versions/A/Headers,
 				);
 				INFOPLIST_FILE = "NYUCodebase/NYUCodebase-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.ivansafrin.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -426,6 +428,7 @@
 					/Library/Frameworks/SDL2_mixer.framework/Versions/A/Headers,
 				);
 				INFOPLIST_FILE = "NYUCodebase/NYUCodebase-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.ivansafrin.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
