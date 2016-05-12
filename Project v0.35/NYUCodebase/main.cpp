@@ -43,6 +43,7 @@ string levelFileTwo = "gamemap2.txt";
 string levelFileThree = "gamemap3.txt";
 int redPlayerKills = 0;
 int bluePlayerKills = 0;
+Mesh tank;
 
 //Game States
 enum GameState {
@@ -79,7 +80,7 @@ int playerTurn = 1;
 
 void processEvents(){
     if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE || keys[SDL_SCANCODE_ESCAPE]) {
-        done = true;
+        //done = true;
         
     }else if (event.type == SDL_KEYDOWN) {
         
@@ -265,7 +266,6 @@ void UpdateGameLevel(ShaderProgram &program) {
 void RenderMainMenu() {
             GLuint fontSheet = LoadTexture("font1.png");
             DrawText(program, fontSheet, "Primitve Wars", 0.5f, -0.25f);
-            Mesh tank;
             tank.loadOBJ("T-90.obj");
             GLuint st = LoadTexture("purple.png");
             modelMatrix.identity();
@@ -280,16 +280,41 @@ void RenderMainMenu() {
 }
 
 void mainMenu(){
-    if (keys[SDL_SCANCODE_RETURN]) {
+    if (keys[SDL_SCANCODE_Q]) {
         state = STATE_GAME_LEVEL_1;
         Setup(*program, levelFileOne);
     }
 }
 
+void update() {
+    switch(state){
+        case STATE_MAIN_MENU:
+            mainMenu();
+            RenderMainMenu();
+            break;
+        case STATE_GAME_LEVEL_1:
+            UpdateGameLevel(*program);
+            RenderGameLevel(*program, elapsed);
+            break;
+        case STATE_GAME_LEVEL_2:
+            UpdateGameLevel(*program);
+            RenderGameLevel(*program, elapsed);
+            break;
+        case STATE_GAME_LEVEL_3:
+            UpdateGameLevel(*program);
+            RenderGameLevel(*program, elapsed);
+            break;
+        case STATE_OVER:
+            state=STATE_MAIN_MENU;
+            break;
+    }
+}
+
+
 int main(int argc, char *argv[])
 {
     SDL_Init(SDL_INIT_VIDEO);
-    displayWindow = SDL_CreateWindow("My Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 360, SDL_WINDOW_OPENGL);
+    displayWindow = SDL_CreateWindow("Primitive Tanks", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 360, SDL_WINDOW_OPENGL);
     SDL_GLContext context = SDL_GL_CreateContext(displayWindow);
     SDL_GL_MakeCurrent(displayWindow, context);
 #ifdef _WINDOWS
@@ -351,6 +376,7 @@ int main(int argc, char *argv[])
     
     while (!done) {
         while (SDL_PollEvent(&event)) {
+            processEvents();
             //Fixed TimeStep
             ticks = (float)SDL_GetTicks()/1000.0f;
             float elapsed = ticks - lastFrameTicks;
@@ -363,50 +389,16 @@ int main(int argc, char *argv[])
                 fixedElapsed -= FIXED_TIMESTEP;
             }
             
-            processEvents();
+            //Background color
+            glClearColor(0.53f, 0.808f, 0.98f, 0.1f);
+            glClear(GL_COLOR_BUFFER_BIT);
             
-            switch(state){
-                case STATE_MAIN_MENU:
-                    mainMenu();
-                    break;
-                case STATE_GAME_LEVEL_1:
-                    UpdateGameLevel(*program);
-                    break;
-                case STATE_GAME_LEVEL_2:
-                    UpdateGameLevel(*program);
-                    break;
-                case STATE_GAME_LEVEL_3:
-                    UpdateGameLevel(*program);
-                    break;
-                case STATE_OVER:
-                    break;
-            }
+            update();
+            SDL_GL_SwapWindow(displayWindow);
         
-            
-            switch(state){
-                case STATE_MAIN_MENU:
-                    RenderMainMenu();
-                    break;
-                case STATE_GAME_LEVEL_1:
-                    RenderGameLevel(*program, elapsed);
-                    break;
-                case STATE_GAME_LEVEL_2:
-                    RenderGameLevel(*program, elapsed);
-                    break;
-                case STATE_GAME_LEVEL_3:
-                    RenderGameLevel(*program, elapsed);
-                    break;
-                case STATE_OVER:
-                    state=STATE_MAIN_MENU;
-                    break;
-            }
-        
-        SDL_GL_SwapWindow(displayWindow);
-        
+        }
     }
-    
     SDL_Quit();
     return 0;
-    }
 }
 
