@@ -9,6 +9,7 @@
 #define Entity_h
 #include <stdio.h>
 #include "ShaderProgram.h"
+#include "SDL_mixer.h"
 #include <math.h>
 #endif /* Entity_h*/
 #include <vector>
@@ -47,11 +48,13 @@ public:
     float distance(Entity *other);
     void rechargeMovement();
     void attack(Entity *other);
+    void playAttackMusic(UnitType unitType);
     
     float x;
     float y;
     int index;
     SheetSprite *sprite;
+    bool canAttack;
     
     float baseHealth=10;
     float baseDamage=5;
@@ -60,4 +63,17 @@ public:
     Fraction fraction;
     UnitKind unitKind;
     UnitType unitType;
+    
+    Mix_Chunk *bullet=Mix_LoadWAV("bullet.wav");
+    Mix_Chunk *explosion=Mix_LoadWAV("explosion.wav");
+    Mix_Chunk *boom=Mix_LoadWAV("boom.wav");
+    
+    Mix_Chunk *attackArray[1][2]={
+        bullet, boom
+    };
+    Mix_Chunk *deathArray[1][1]={
+        explosion
+    };
+    
 };
+

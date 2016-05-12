@@ -68,7 +68,7 @@ vector<Entity> allUnits;
 
 void Setup (ShaderProgram &program) {
     //Load Map File
-    string levelFileOne = "/Users/Kevin/Desktop/Stuff/NYU-Poly/CS3113/Final/CS3113-Game-Development-Project/Project v0.25/resources/gamemap1.txt";
+    string levelFileOne = "/Users/errolelbasan/Documents/Codes/Game-Development-Project/Project v0.25/resources/gamemap1.txt";
     ifstream infile(levelFileOne);
     string line;
     while (getline(infile, line)) {
@@ -168,19 +168,16 @@ int main(int argc, char *argv[])
     Setup(*program);
     Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 4096 );
     Mix_Music *music;
-    Mix_Chunk *bullet;
     music = Mix_LoadMUS("War Theme  America the Beautiful.mp3");
-    bullet = Mix_LoadWAV("bullet.wav");
     Mix_PlayMusic(music, -1);
-    Mix_PlayChannel(-1, bullet, 0);
     
     
     mapTexture = LoadTexture("RPGpack_sheet.png");
     SheetSprite mapSprite(program, mapTexture, 20, 13, .3);
     unitTexture = LoadTexture("Map_units.png");
-    GLuint fire1Texture = LoadTexture("/Users/Kevin/Desktop/Stuff/NYU-Poly/CS3113/Final/CS3113-Game-Development-Project/Project v0.25/NYUCodebase/fire.png");
+    GLuint fire1Texture = LoadTexture("fire.png");
     SheetSprite fire1Sprite(program, fire1Texture, 1, 1, .3);
-    GLuint fire2Texture = LoadTexture("/Users/Kevin/Desktop/Stuff/NYU-Poly/CS3113/Final/CS3113-Game-Development-Project/Project v0.25/NYUCodebase/fire2.png");
+    GLuint fire2Texture = LoadTexture("fire2.png");
     SheetSprite fire2Sprite(program, fire2Texture, 1, 1, .3);
     SheetSprite unitSprite(program, unitTexture, 26, 10, .3);
     selectionWindow=new Entity(0, 0, NotType, None, mapSprite);
@@ -259,8 +256,9 @@ int main(int argc, char *argv[])
                         if(unitSelected->distance(selectionWindow) == 1) {
                             for(int i = 0;i<allUnits.size(); i++) {
                                 if(allUnits[i].x == selectionWindow->x && allUnits[i].y == selectionWindow->y && allUnits[i].fraction != playerTurn) {
-                                    unitSelected->attack(&allUnits[i]);
                                     
+                                    allUnits[i].playAttackMusic(allUnits[i].unitType);
+                                    unitSelected->attack(&allUnits[i]);
                                 }
                             }
                             warWindowOn = false;

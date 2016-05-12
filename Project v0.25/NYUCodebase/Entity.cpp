@@ -164,3 +164,12 @@ void Entity::rechargeMovement(){
         }
     }
 }
+
+void Entity::playAttackMusic(UnitType unitType){
+    if(unitType==Inf || unitType==APC){
+        Mix_PlayChannel(-1, attackArray[0][0], 0);
+    }else if(unitType==HTank || unitType==MTank || unitType==LTank){
+        Mix_PlayChannel(-1, attackArray[0][0], 0);
+    }
+}
+
