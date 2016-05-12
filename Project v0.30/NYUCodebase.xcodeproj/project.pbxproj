@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A5F73511CE4FF8B00F6DB08 /* gamemap2.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0A5F73501CE4FF8B00F6DB08 /* gamemap2.txt */; };
+		0A5F73521CE4FF9500F6DB08 /* gamemap2.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0A5F73501CE4FF8B00F6DB08 /* gamemap2.txt */; };
+		0A5F73541CE5017600F6DB08 /* gamemap3.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0A5F73531CE5017600F6DB08 /* gamemap3.txt */; };
+		0A5F73551CE5018300F6DB08 /* gamemap3.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0A5F73531CE5017600F6DB08 /* gamemap3.txt */; };
 		0AB6B7BA1CE4F27B00405FAA /* purple.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AB6B7B91CE4F27B00405FAA /* purple.png */; };
 		0AB6B7BC1CE4F2FC00405FAA /* T-90.obj in Resources */ = {isa = PBXBuildFile; fileRef = 0AB6B7BB1CE4F2FC00405FAA /* T-90.obj */; };
 		0AB6B7BE1CE4F6E600405FAA /* gamemap1.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = D34FAAEB1CD1ADD8007C4DBB /* gamemap1.txt */; };
@@ -45,6 +49,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
+				0A5F73551CE5018300F6DB08 /* gamemap3.txt in CopyFiles */,
+				0A5F73521CE4FF9500F6DB08 /* gamemap2.txt in CopyFiles */,
 				0AB6B7BF1CE4F6F200405FAA /* T-90.obj in CopyFiles */,
 				0AB6B7BE1CE4F6E600405FAA /* gamemap1.txt in CopyFiles */,
 			);
@@ -53,6 +59,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0A5F73501CE4FF8B00F6DB08 /* gamemap2.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = gamemap2.txt; sourceTree = "<group>"; };
+		0A5F73531CE5017600F6DB08 /* gamemap3.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = gamemap3.txt; sourceTree = "<group>"; };
 		0AB6B7B91CE4F27B00405FAA /* purple.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = purple.png; sourceTree = "<group>"; };
 		0AB6B7BB1CE4F2FC00405FAA /* T-90.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "T-90.obj"; sourceTree = "<group>"; };
 		6D5A86AA19AE5C710066C1FD /* NYUCodebase.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NYUCodebase.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -214,6 +222,8 @@
 		D3D0A4C21CE441D600F2DF9E /* resources */ = {
 			isa = PBXGroup;
 			children = (
+				0A5F73531CE5017600F6DB08 /* gamemap3.txt */,
+				0A5F73501CE4FF8B00F6DB08 /* gamemap2.txt */,
 				0AB6B7BB1CE4F2FC00405FAA /* T-90.obj */,
 				0AB6B7B91CE4F27B00405FAA /* purple.png */,
 				D3D0A4C71CE4428200F2DF9E /* ImperialMusic.mp3 */,
@@ -295,8 +305,10 @@
 				0AB6B7BC1CE4F2FC00405FAA /* T-90.obj in Resources */,
 				D3D0A4C51CE4427800F2DF9E /* fire.png in Resources */,
 				6D5A86BE19AE5C710066C1FD /* Credits.rtf in Resources */,
+				0A5F73511CE4FF8B00F6DB08 /* gamemap2.txt in Resources */,
 				6DEF23C41B96CC2600BCE792 /* vertex.glsl in Resources */,
 				6DC7076A1BA7273500225B7D /* vertex_textured.glsl in Resources */,
+				0A5F73541CE5017600F6DB08 /* gamemap3.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -34,11 +34,15 @@ const Uint8 *keys = SDL_GetKeyboardState(NULL);
 ShaderProgram* program;
 GLuint mapTexture = 0;
 GLuint unitTexture = 0;
-
+string levelFileOne = "gamemap1.txt";
+string levelFileTwo = "gamemap2.txt";
+string levelFileThree = "gamemap3.txt";
+int redPlayer = 0;
+int bluePlayer = 0;
 
 //Game States
 enum GameState {
-    STATE_MAIN_MENU, STATE_GAME_LEVEL_1, STATE_WIN, STATE_LOSE
+    STATE_MAIN_MENU, STATE_GAME_LEVEL_1, STATE_GAME_LEVEL_2, STATE_GAME_LEVEL_3, STATE_WIN, STATE_LOSE
 };
 int state = STATE_MAIN_MENU;
 
@@ -139,10 +143,9 @@ void Mesh::Render(ShaderProgram *program) {
     glDisableVertexAttribArray(program->texCoordAttribute);
 }
 
-void Setup (ShaderProgram &program) {
+void Setup (ShaderProgram &program, string file) {
     //Load Map File
-    string levelFileOne = "gamemap1.txt";
-    ifstream infile(levelFileOne);
+    ifstream infile(file);
     string line;
     while (getline(infile, line)) {
         if (line == "[header]") {
@@ -153,8 +156,6 @@ void Setup (ShaderProgram &program) {
         }
         else if (line == "[layer2]") {
             level.readLayerData2(infile);
-        }
-        else if (line == "[ObjectsLayer]") {
         }
     }
 }
@@ -215,7 +216,7 @@ int death =0;
 
 void update() {
     switch(state) {
-        case STATE_WIN:
+        case STATE_LOSE:
 
             break;
         case STATE_MAIN_MENU: {
@@ -237,16 +238,17 @@ void update() {
             RenderGameLevel(*program, elapsed);
             UpdateGameLevel(*program);
             break;
-        
+        case STATE_GAME_LEVEL_2:
+            RenderGameLevel(*program, elapsed);
+            UpdateGameLevel(*program);
+            break;
+        case STATE_GAME_LEVEL_3:
+            RenderGameLevel(*program, elapsed);
+            UpdateGameLevel(*program);
+            break;
     }
 }
-void processState() {
-    if (state == STATE_MAIN_MENU) {
-        if (keys[SDL_SCANCODE_P]) {
-            state = STATE_GAME_LEVEL_1;
-        }
-    }
-}
+
 
 int main(int argc, char *argv[])
 {
@@ -270,12 +272,11 @@ int main(int argc, char *argv[])
     program->setViewMatrix(viewMatrix);
     projectionMatrix.setOrthoProjection(-5.55, 5.55, -3.0f, 3.0f, -1.0f, 1.0f);
     
-    Setup(*program);
+    //Setup(*program);
     Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 4096 );
     Mix_Music *music;
     music = Mix_LoadMUS("ImperialMusic.mp3");
     Mix_PlayMusic(music, -1);
-    
     
     mapTexture = LoadTexture("RPGpack_sheet.png");
     SheetSprite mapSprite(program, mapTexture, 20, 13, .3);
@@ -294,19 +295,48 @@ int main(int argc, char *argv[])
     Entity *unitSelected = new Entity(0, 0, NotType, None, mapSprite);
     
     //Add Units
-    Entity unit(0, 0, Inf, Red, unitSprite);
-    Entity unit2(1, 1, APC, Blue, unitSprite);
+    Entity unit(0, 20, Inf, Red, unitSprite);
+    Entity unit1(0, 21, Inf, Red, unitSprite);
+    Entity unit2(0, 22, Inf, Red, unitSprite);
+    Entity unit3(0, 23, Inf, Red, unitSprite);
+    
+    
+    Entity unit4(20, 1, APC, Blue, unitSprite);
+    Entity unit5(20, 2, APC, Blue, unitSprite);
+    Entity unit6(20, 3, APC, Blue, unitSprite);
+    Entity unit7(20, 4, APC, Blue, unitSprite);
+    
     allUnits.push_back(unit);
+    allUnits.push_back(unit1);
     allUnits.push_back(unit2);
+    allUnits.push_back(unit3);
+    allUnits.push_back(unit4);
+    allUnits.push_back(unit5);
+    allUnits.push_back(unit6);
+    allUnits.push_back(unit7);
     int playerTurn = 1;
     while (!done) {
         while (SDL_PollEvent(&event)) {
             if (state == STATE_MAIN_MENU) {
-                if (keys[SDL_SCANCODE_P]) {
+                if (keys[SDL_SCANCODE_Q]) {
                     state = STATE_GAME_LEVEL_1;
+                    Setup(*program, levelFileOne);
                     Mesh tank;
                 }
             }
+            if (keys[SDL_SCANCODE_Q]) {
+                state = STATE_GAME_LEVEL_1;
+                Setup(*program, levelFileOne);
+            }
+            if (keys[SDL_SCANCODE_E]) {
+                state = STATE_GAME_LEVEL_2;
+                Setup(*program, levelFileTwo);
+            }
+            if (keys[SDL_SCANCODE_R]) {
+                state = STATE_GAME_LEVEL_3;
+                Setup(*program, levelFileThree);
+            }
+
             if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE) {
                 done = true;
             }
@@ -395,7 +425,6 @@ int main(int argc, char *argv[])
                     allUnits[i].sprite = &fire1Sprite;
                     death++;
                 }
-
                 else if(death % 4 == 1){
                     allUnits[i].sprite = &fire2Sprite;
                     death++;
@@ -405,6 +434,8 @@ int main(int argc, char *argv[])
                 }
             }
         }
+        
+
         ticks = (float)SDL_GetTicks()/1000.0f;
         float elapsed = ticks - lastFrameTicks;
         lastFrameTicks = ticks;
