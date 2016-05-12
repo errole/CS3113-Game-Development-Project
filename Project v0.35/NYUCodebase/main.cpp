@@ -27,14 +27,17 @@ using namespace std;
 #define FIXED_TIMESTEP 0.0166666f
 #define MAX_TIMESTEPS 6
 float ticks;
-//Global Setup Parameters
+//Global Setup Parameters SDL Stuff
 SDL_Window* displayWindow;
-unsigned char** levelData;
+SDL_Event event;
 const Uint8 *keys = SDL_GetKeyboardState(NULL);
 ShaderProgram* program;
+//
+unsigned char** levelData;
 GLuint mapTexture = 0;
 GLuint unitTexture = 0;
-
+SheetSprite *fire1Sprite;
+SheetSprite *fire2Sprite;
 string levelFileOne = "gamemap1.txt";
 string levelFileTwo = "gamemap2.txt";
 string levelFileThree = "gamemap3.txt";
@@ -67,9 +70,94 @@ bool warWindowOn = false;
 Entity *selectionWindow;
 Entity *moveWindow;
 Entity *warWindow;
+Entity *unitSelected;
 Map level;
 vector<Entity> allUnits;
+int death =0;
+bool done = false;
+int playerTurn = 1;
 
+void processEvents(){
+    if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE || keys[SDL_SCANCODE_ESCAPE]) {
+        done = true;
+        
+    }else if (event.type == SDL_KEYDOWN) {
+        
+        if (keys[SDL_SCANCODE_W] && selectionWindow->y > 0) {
+            selectionWindow->y -= 1;
+        }
+        if (keys[SDL_SCANCODE_S] && selectionWindow->y < level.mapHeight - 1) {
+            selectionWindow->y += 1;
+        }
+        if (keys[SDL_SCANCODE_D] && selectionWindow->x < level.mapWidth - 1) {
+            selectionWindow->x += 1;
+        }
+        if (keys[SDL_SCANCODE_A] && selectionWindow->x > 0) {
+                selectionWindow->x -= 1;
+        }
+        //Allow Player to Select Own Units and then 2nd time is movement
+        if (keys[SDL_SCANCODE_X]){
+            if ( moveWindowOn == true){
+                if (selectionWindow->checkOccupation(allUnits) && unitSelected->distance(selectionWindow) <= unitSelected->baseMovement && !level.mapCollision(selectionWindow)) {
+                    unitSelected->baseMovement -= unitSelected->distance(selectionWindow);
+                    unitSelected->x = selectionWindow->x;
+                    unitSelected->y = selectionWindow->y;
+                    moveWindowOn = false;
+                }
+            }else{
+                for(int i = 0; i < allUnits.size(); i++) {
+                    if (allUnits[i].x == selectionWindow->x && allUnits[i].y == selectionWindow->y && allUnits[i].fraction == playerTurn &&     allUnits[i].baseMovement > 0) {
+                        moveWindowOn = true;
+                        unitSelected = &allUnits[i];
+                        //cout << unitSelected->baseMovement;
+                        moveWindow->x = unitSelected->x;
+                        moveWindow->y = unitSelected->y;
+                    }
+                }
+            }
+        }
+        //Enter Attack Mode
+        if(keys[SDL_SCANCODE_Z]) {
+            if(warWindowOn == true) {
+                if(unitSelected->distance(selectionWindow) == 1) {
+                    for(int i = 0;i<allUnits.size(); i++) {
+                        if(allUnits[i].x == selectionWindow->x && allUnits[i].y == selectionWindow->y && allUnits[i].fraction != playerTurn) {
+                        
+                            allUnits[i].playAttackMusic(allUnits[i].unitType);
+                            unitSelected->attack(&allUnits[i]);
+                        }
+                    }
+                    warWindowOn = false;
+                }
+            }else {
+                for(int i = 0; i < allUnits.size(); i++) {
+                    if(allUnits[i].x == selectionWindow->x && allUnits[i].y == selectionWindow->y && allUnits[i].fraction == playerTurn) {
+                        warWindowOn = true;
+                        unitSelected = &allUnits[i];
+                        warWindow->x = unitSelected->x;
+                        warWindow->y = unitSelected->y;
+                    }
+                }
+            }
+        }
+        
+        //Shadow Box Movement Controls
+        if (keys[SDL_SCANCODE_RETURN]) {
+            cout << "Enter";
+            //Alternate Players
+            playerTurn += 1;
+            if (playerTurn > 2) {
+                playerTurn = 1;
+            }
+            //Recharge all Movement
+            for(int i = 0; i < allUnits.size(); i++) {
+                if (playerTurn == allUnits[i].fraction) {
+                    allUnits[i].rechargeMovement();
+                }
+            }
+        }
+    }
+}
 
 void Setup (ShaderProgram &program, string file) {
     //Load Map File
@@ -107,7 +195,6 @@ void RenderGameLevel(ShaderProgram &program, float elapsed) {
     viewMatrix.Scale(zoom, zoom, 0);
     viewMatrix.Translate(posX,posY,0);
     program.setViewMatrix(viewMatrix);
-
 }
 
 void UpdateGameLevel(ShaderProgram &program) {
@@ -138,16 +225,44 @@ void UpdateGameLevel(ShaderProgram &program) {
     if (keys[SDL_SCANCODE_L]) {
         zoom -= zoomRes;
     }
+    if (keys[SDL_SCANCODE_Q]) {
+        state = STATE_GAME_LEVEL_1;
+        Setup(program, levelFileOne);
+    }
+    if (keys[SDL_SCANCODE_E]) {
+        state = STATE_GAME_LEVEL_2;
+        Setup(program, levelFileTwo);
+    }
+    if (keys[SDL_SCANCODE_R]) {
+        state = STATE_GAME_LEVEL_3;
+        Setup(program, levelFileThree);
+    }
+    for(int i = 0;i<allUnits.size(); i++) {
+        if(allUnits[i].baseHealth <= 0) {
+            if(death % 4 == 0){
+                allUnits[i].sprite = fire1Sprite;
+                death++;
+            }else if(death % 4 == 1){
+                allUnits[i].sprite = fire2Sprite;
+                death++;
+            }else{
+                if (allUnits[i].fraction == Red) {
+                    redPlayerKills++;
+                }
+                if (allUnits[i].fraction == Blue) {
+                    bluePlayerKills++;
+                }
+                allUnits.erase(allUnits.begin() + i);
+            }
+        }
+    }
+    
+    if (redPlayerKills == 1 || bluePlayerKills == 1 ) {
+        state = STATE_OVER;
+    }
 }
 
-int death =0;
-
-void update() {
-    switch(state) {
-        case STATE_OVER: {
-            state = STATE_MAIN_MENU;
-        }
-        case STATE_MAIN_MENU: {
+void RenderMainMenu() {
             GLuint fontSheet = LoadTexture("font1.png");
             DrawText(program, fontSheet, "Primitve Wars", 0.5f, -0.25f);
             Mesh tank;
@@ -162,23 +277,14 @@ void update() {
             viewMatrix.Scale(0.3, 0.3, 0);
             program->setViewMatrix(viewMatrix);
             tank.Render(program);
-            break;
-        }
-        case STATE_GAME_LEVEL_1:
-            RenderGameLevel(*program, elapsed);
-            UpdateGameLevel(*program);
-            break;
-        case STATE_GAME_LEVEL_2:
-            RenderGameLevel(*program, elapsed);
-            UpdateGameLevel(*program);
-            break;
-        case STATE_GAME_LEVEL_3:
-            RenderGameLevel(*program, elapsed);
-            UpdateGameLevel(*program);
-            break;
-    }
 }
 
+void mainMenu(){
+    if (keys[SDL_SCANCODE_RETURN]) {
+        state = STATE_GAME_LEVEL_1;
+        Setup(*program, levelFileOne);
+    }
+}
 
 int main(int argc, char *argv[])
 {
@@ -190,9 +296,7 @@ int main(int argc, char *argv[])
     glewInit();
 #endif
     glViewport(0, 0, 640, 360);
-    
-    SDL_Event event;
-    bool done = false;
+
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
@@ -202,40 +306,39 @@ int main(int argc, char *argv[])
     program->setViewMatrix(viewMatrix);
     projectionMatrix.setOrthoProjection(-5.55, 5.55, -3.0f, 3.0f, -1.0f, 1.0f);
     
-    //Setup(*program);
+    //Music
     Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 4096 );
     Mix_Music *music;
     music = Mix_LoadMUS("ImperialMusic.mp3");
     Mix_PlayMusic(music, -1);
-    
-    mapTexture = LoadTexture("RPGpack_sheet.png");
-    SheetSprite mapSprite(program, mapTexture, 20, 13, .3);
-    unitTexture = LoadTexture("Map_units.png");
+    //Sprites
     GLuint fire1Texture = LoadTexture("fire.png");
     SheetSprite fire1Sprite(program, fire1Texture, 1, 1, .3);
     GLuint fire2Texture = LoadTexture("fire2.png");
     SheetSprite fire2Sprite(program, fire2Texture, 1, 1, .3);
+    mapTexture = LoadTexture("RPGpack_sheet.png");
+    SheetSprite mapSprite(program, mapTexture, 20, 13, .3);
+    unitTexture = LoadTexture("Map_units.png");
     SheetSprite unitSprite(program, unitTexture, 26, 10, .3);
+    Mesh tank;
+    //Control Entities
     selectionWindow=new Entity(0, 0, NotType, None, mapSprite);
     selectionWindow->index = 15;
     moveWindow=new Entity(0, 0, NotType, None, mapSprite);
     moveWindow->index = 17;
     warWindow=new Entity(0, 0, NotType, None, mapSprite);
     warWindow->index = 16;
-    Entity *unitSelected = new Entity(0, 0, NotType, None, mapSprite);
+    unitSelected = new Entity(0, 0, NotType, None, mapSprite);
     
     //Add Units
     Entity unit(0, 20, Inf, Red, unitSprite);
     Entity unit1(0, 21, APC, Red, unitSprite);
     Entity unit2(0, 22, ATInf, Red, unitSprite);
     Entity unit3(0, 23, LTank, Red, unitSprite);
-    
-    
     Entity unit4(20, 1, Inf, Blue, unitSprite);
     Entity unit5(20, 2, APC, Blue, unitSprite);
     Entity unit6(20, 3, ATInf, Blue, unitSprite);
     Entity unit7(20, 4, LTank, Blue, unitSprite);
-    
     allUnits.push_back(unit);
     allUnits.push_back(unit1);
     allUnits.push_back(unit2);
@@ -244,159 +347,59 @@ int main(int argc, char *argv[])
     allUnits.push_back(unit5);
     allUnits.push_back(unit6);
     allUnits.push_back(unit7);
-    int playerTurn = 1;
+    
     
     while (!done) {
         while (SDL_PollEvent(&event)) {
+            //Fixed TimeStep
+            ticks = (float)SDL_GetTicks()/1000.0f;
+            float elapsed = ticks - lastFrameTicks;
+            lastFrameTicks = ticks;
+            float fixedElapsed = elapsed;
+            if(fixedElapsed > FIXED_TIMESTEP * MAX_TIMESTEPS) {
+                fixedElapsed = FIXED_TIMESTEP * MAX_TIMESTEPS;
+            }
+            while (fixedElapsed >= FIXED_TIMESTEP ) {
+                fixedElapsed -= FIXED_TIMESTEP;
+            }
             
-            if (state == STATE_MAIN_MENU) {
-                if (keys[SDL_SCANCODE_Q]) {
-                    state = STATE_GAME_LEVEL_1;
-                    Setup(*program, levelFileOne);
-                    Mesh tank;
-                }
+            processEvents();
+            
+            switch(state){
+                case STATE_MAIN_MENU:
+                    mainMenu();
+                    break;
+                case STATE_GAME_LEVEL_1:
+                    UpdateGameLevel(*program);
+                    break;
+                case STATE_GAME_LEVEL_2:
+                    UpdateGameLevel(*program);
+                    break;
+                case STATE_GAME_LEVEL_3:
+                    UpdateGameLevel(*program);
+                    break;
+                case STATE_OVER:
+                    break;
             }
-            if (keys[SDL_SCANCODE_Q]) {
-                state = STATE_GAME_LEVEL_1;
-                Setup(*program, levelFileOne);
-            }
-            if (keys[SDL_SCANCODE_E]) {
-                state = STATE_GAME_LEVEL_2;
-                Setup(*program, levelFileTwo);
-            }
-            if (keys[SDL_SCANCODE_R]) {
-                state = STATE_GAME_LEVEL_3;
-                Setup(*program, levelFileThree);
-            }
-
-            if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE || keys[SDL_SCANCODE_ESCAPE]) {
-                done = true;
-            }
-            else if (event.type == SDL_KEYDOWN) {
-                
-                if (keys[SDL_SCANCODE_W] && selectionWindow->y > 0) {
-                    selectionWindow->y -= 1;
-                }
-                if (keys[SDL_SCANCODE_S] && selectionWindow->y < level.mapHeight - 1) {
-                    selectionWindow->y += 1;
-                }
-                if (keys[SDL_SCANCODE_D] && selectionWindow->x < level.mapWidth - 1) {
-                    selectionWindow->x += 1;
-                }
-                if (keys[SDL_SCANCODE_A] && selectionWindow->x > 0) {
-                    selectionWindow->x -= 1;
-                }
-                
-                //Allow Player to Select Own Units and then 2nd time is movement
-                if (keys[SDL_SCANCODE_X]){
-                    if ( moveWindowOn == true){
-                        if (selectionWindow->checkOccupation(allUnits) && unitSelected->distance(selectionWindow) <= unitSelected->baseMovement && !level.mapCollision(selectionWindow)) {
-                            unitSelected->baseMovement -= unitSelected->distance(selectionWindow);
-                            unitSelected->x = selectionWindow->x;
-                            unitSelected->y = selectionWindow->y;
-                            moveWindowOn = false;
-                        }
-                    }
-                    else {
-                        for(int i = 0; i < allUnits.size(); i++) {
-                            if (allUnits[i].x == selectionWindow->x && allUnits[i].y == selectionWindow->y && allUnits[i].fraction == playerTurn && allUnits[i].baseMovement > 0) {
-                                moveWindowOn = true;
-                                unitSelected = &allUnits[i];
-                                //cout << unitSelected->baseMovement;
-                                moveWindow->x = unitSelected->x;
-                                moveWindow->y = unitSelected->y;
-                            }
-                        }
-                    }
-                }
-                //Enter Attack Mode
-                if(keys[SDL_SCANCODE_Z]) {
-                    if(warWindowOn == true) {
-                        if(unitSelected->distance(selectionWindow) == 1) {
-                            for(int i = 0;i<allUnits.size(); i++) {
-                                if(allUnits[i].x == selectionWindow->x && allUnits[i].y == selectionWindow->y && allUnits[i].fraction != playerTurn) {
-                                    
-                                    allUnits[i].playAttackMusic(allUnits[i].unitType);
-                                    unitSelected->attack(&allUnits[i]);
-                                }
-                            }
-                            warWindowOn = false;
-                        }
-                    }
-                    else {
-                        for(int i = 0; i < allUnits.size(); i++) {
-                            if(allUnits[i].x == selectionWindow->x && allUnits[i].y == selectionWindow->y && allUnits[i].fraction == playerTurn) {
-                                warWindowOn = true;
-                                unitSelected = &allUnits[i];
-                                warWindow->x = unitSelected->x;
-                                warWindow->y = unitSelected->y;
-                            }
-                        }
-                    }
-                }
-                //cout << level.mapCollision(selectionWindow);
-                //Shadow Box Movement Controls
-                if (keys[SDL_SCANCODE_RETURN]) {
-                    cout << "Enter";
-                    //Alternate Players
-                    playerTurn += 1;
-                    if (playerTurn > 2) {
-                        playerTurn = 1;
-                    }
-                    //Recharge all Movement
-                    for(int i = 0; i < allUnits.size(); i++) {
-                        if (playerTurn == allUnits[i].fraction) {
-                            allUnits[i].rechargeMovement();
-                        }
-                    }
-                }
-            }
-        }
         
-        for(int i = 0;i<allUnits.size(); i++) {
-            if(allUnits[i].baseHealth <= 0) {
-                if(death % 4 == 0){
-                    allUnits[i].sprite = &fire1Sprite;
-                    death++;
-                }
-                else if(death % 4 == 1){
-                    allUnits[i].sprite = &fire2Sprite;
-                    death++;
-                }
-                else{
-                    if (allUnits[i].fraction == Red) {
-                        redPlayerKills++;
-                    }
-                    if (allUnits[i].fraction == Blue) {
-                        bluePlayerKills++;
-                    }
-                    allUnits.erase(allUnits.begin() + i);
-                }
+            
+            switch(state){
+                case STATE_MAIN_MENU:
+                    RenderMainMenu();
+                    break;
+                case STATE_GAME_LEVEL_1:
+                    RenderGameLevel(*program, elapsed);
+                    break;
+                case STATE_GAME_LEVEL_2:
+                    RenderGameLevel(*program, elapsed);
+                    break;
+                case STATE_GAME_LEVEL_3:
+                    RenderGameLevel(*program, elapsed);
+                    break;
+                case STATE_OVER:
+                    state=STATE_MAIN_MENU;
+                    break;
             }
-        }
-        
-        if (redPlayerKills == 1 || bluePlayerKills == 1 ) {
-            state = STATE_OVER;
-        }
-        
-        
-        ticks = (float)SDL_GetTicks()/1000.0f;
-        float elapsed = ticks - lastFrameTicks;
-        lastFrameTicks = ticks;
-        float fixedElapsed = elapsed;
-        if(fixedElapsed > FIXED_TIMESTEP * MAX_TIMESTEPS) {
-            fixedElapsed = FIXED_TIMESTEP * MAX_TIMESTEPS;
-        }
-        while (fixedElapsed >= FIXED_TIMESTEP ) {
-            fixedElapsed -= FIXED_TIMESTEP;
-        }
-        //Background color
-        glClearColor(0.53f, 0.808f, 0.98f, 0.1f);
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        
-        update();
-        
         
         SDL_GL_SwapWindow(displayWindow);
         
@@ -404,7 +407,6 @@ int main(int argc, char *argv[])
     
     SDL_Quit();
     return 0;
+    }
 }
-
-
 
