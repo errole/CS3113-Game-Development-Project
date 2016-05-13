@@ -133,9 +133,13 @@ void RenderGameLevel(ShaderProgram &program, float elapsed) {
     if (warWindowOn) {
         warWindow->Render(modelMatrix);
     }
-    for(int i =0; i<fireArray.size();i++){
-        fireArray[i].Render(&program, modelMatrix);
+    if (fireArray.size() > 0) {
+        for(int i =0; i<fireArray.size();i++){
+            fireArray[i].Render(&program, modelMatrix);
+            fireArray[i+1].Render(&program, modelMatrix);
+        }
     }
+    fireArray.clear();
     //Scrolling
     viewMatrix.identity();
     viewMatrix.Scale(zoom, zoom, 0);
@@ -224,8 +228,7 @@ void UpdateGameLevel(ShaderProgram &program) {
                     allUnits[i].rechargeMovement();
                 }
             }
-            fireArray.clear();
-            turnCount+=1;
+            //fireArray.clear();
         }
     }
     }
@@ -266,7 +269,9 @@ void UpdateGameLevel(ShaderProgram &program) {
     for(int i = 0;i<allUnits.size(); i++) {
         if(allUnits[i].baseHealth <= 0) {
             Particle fire(allUnits[i].x, allUnits[i].y,.5,fire1Texture);
+            Particle fire2(allUnits[i].x, allUnits[i].y,.5,fire2Texture);
             fireArray.push_back(fire);
+            fireArray.push_back(fire2);
             allUnits.erase(allUnits.begin() + i);
         }
     }
