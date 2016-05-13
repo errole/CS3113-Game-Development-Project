@@ -192,7 +192,6 @@ void UpdateGameLevel(ShaderProgram &program) {
                 }
             }
         }
-        cout << level.levelData[selectionWindow->y][selectionWindow->x];
     }
     }
     //Map Controls
@@ -227,6 +226,7 @@ void UpdateGameLevel(ShaderProgram &program) {
     if (keys[SDL_SCANCODE_L]) {
         zoom -= zoomRes;
     }
+    
     for(int i = 0;i<allUnits.size(); i++) {
         if(allUnits[i].baseHealth <= 0) {
             if(death % 4 == 0){
