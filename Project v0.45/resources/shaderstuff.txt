@@ -1,0 +1,10 @@
+GLint lightPositionsUniform = glGetUniformLocation(program.programID, "lightPositions");
+GLint lights = glGetUniformLocation(program.programID, "numUnit");
+// -----
+GLfloat lightPositions[6 * 2];
+for(int i=0; i < 6; i++) {
+lightPositions[i*2] = lights[i].x;
+lightPositions[(i*2)+1] = lights[i].y;
+}
+glUniform2fv(lightPositionsUniform, 6, lightPositions);
+gluniform1i(lights,insert unit vector size here)
