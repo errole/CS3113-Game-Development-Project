@@ -49,7 +49,6 @@ public:
     void rechargeMovement();
     void attack(Entity *other);
     void playAttackMusic(UnitType unitType);
-    void shadeRange(SheetSprite *sheet,Matrix &modelMatrix);
     
     int x;
     int y;

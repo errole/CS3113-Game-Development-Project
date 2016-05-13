@@ -1,19 +1,19 @@
 //
-//  mesh.hpp
+//  Mesh.hpp
 //  NYUCodebase
 //
 //  Created by Errol Elbasan on 5/12/16.
 //  Copyright © 2016 Ivan Safrin. All rights reserved.
 //
 #pragma once
-#ifndef mesh_hpp
 #include <vector>
 #include "ShaderProgram.h"
-#define mesh_hpp
+#ifndef Mesh_hpp
+#define Mesh_hpp
 
 #include <stdio.h>
 
-#endif /* mesh_hpp */
+#endif /* Mesh_hpp */
 
 class Mesh {
 public:

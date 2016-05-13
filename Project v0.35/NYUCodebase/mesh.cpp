@@ -1,22 +1,23 @@
 //
-//  mesh.cpp
+//  Mesh.cpp
 //  NYUCodebase
 //
 //  Created by Errol Elbasan on 5/12/16.
 //  Copyright © 2016 Ivan Safrin. All rights reserved.
 //
 
-#include "mesh.hpp"
+#include "Mesh.hpp"
+using namespace std;
 
 void Mesh::loadOBJ(const char *fileName) {
-    std::ifstream infile(fileName);
-    std::string line;
+    ifstream infile(fileName);
+    string line;
     std::vector<float> fileVertices;
     std::vector<float> fileUVs;
     std::vector<float> fileNormals;
     while (getline(infile, line)) {
-        std::istringstream sStream(line);
-        std::string token;
+        istringstream sStream(line);
+        string token;
         getline(sStream, token, ' ');
         if (token == "v") {
             while (getline(sStream, token, ' ')) {
@@ -35,8 +36,8 @@ void Mesh::loadOBJ(const char *fileName) {
         }
         else if (token == "f") {
             while (getline(sStream, token, ' ')) {
-                std::istringstream faceStream(token);
-                std::string faceToken;
+                istringstream faceStream(token);
+                string faceToken;
                 int type = 0;
                 while (getline(faceStream, faceToken, '/')) {
                     int index = atoi(faceToken.c_str()) - 1;

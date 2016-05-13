@@ -382,7 +382,6 @@ int main(int argc, char *argv[])
                         }
                     }
                 }
-                cout << level.mapCollision(selectionWindow);
                 //Shadow Box Movement Controls
                 if (keys[SDL_SCANCODE_RETURN]) {
                     cout << "Enter";
