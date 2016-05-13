@@ -3,17 +3,17 @@
 #include <GL/glew.h>
 #endif
 #include <stdlib.h>
-#include <vector>
 #include <SDL.h>
 #include <SDL_opengl.h>
 #include <SDL_image.h>
 #include <SDL_mixer.h>
+#include <vector>
+#include <map>
 #include "Matrix.h"
 #include "ShaderProgram.h"
 #include "Entity.h"
 #include "Utilities.h"
 #include "Map.h"
-#include <map>
 #include "Mesh.hpp"
 using namespace std;
 
@@ -43,6 +43,8 @@ GLuint mapTexture;
 GLuint unitTexture;
 GLuint fire1Texture;
 GLuint fire2Texture;
+GLuint fontSheet;
+GLuint tankSkin;
 SheetSprite *mapSprite;
 SheetSprite *fire1Sprite;
 SheetSprite *fire2Sprite;
@@ -71,6 +73,7 @@ Entity *warWindow;
 Entity *unitSelected;
 Map level;
 vector<Entity> allUnits;
+string message="";
 int redPlayerUnits = 0;
 int bluePlayerUnits = 0;
 int death = 0;
@@ -252,12 +255,12 @@ void UpdateGameLevel(ShaderProgram &program) {
         zoom -= zoomRes;
     }
     
+    //Check for Dead Units
     for(int i = 0;i<allUnits.size(); i++) {
         if(allUnits[i].baseHealth <= 0) {
                 allUnits.erase(allUnits.begin() + i);
         }
     }
-    
     //Count Units Still Alive
     redPlayerUnits=0;
     bluePlayerUnits=0;
@@ -268,21 +271,24 @@ void UpdateGameLevel(ShaderProgram &program) {
             redPlayerUnits+=1;
         }
     }
-    
-    if(bluePlayerUnits==0 || redPlayerUnits==0){
+    //Check Win Condition
+    if(bluePlayerUnits==0){
+        message="Blue Player Wins";
+        state=STATE_MAIN_MENU;
+    }else if(redPlayerUnits==0){
+        message="Red Player Wins";
         state=STATE_MAIN_MENU;
     }
 }
 
 void RenderMenu(){
-    GLuint fontSheet = LoadTexture("font1.png");
-    DrawText(program, fontSheet, "Primitve Wars", 0.5f, -0.25f);
-    GLuint st = LoadTexture("purple.png");
+    DrawText(program, fontSheet, "Primitve Wars", 0.5f, -0.25f, -1.5, -1.2);
+    DrawText(program, fontSheet, message, 0.5f, -0.25f, -1.9, -1.9);
     modelMatrix.identity();
     modelMatrix.Translate(0, -1, 0);
     modelMatrix.Yaw(ticks/15);
     program->setModelMatrix(modelMatrix);
-    glBindTexture(GL_TEXTURE_2D,st);
+    glBindTexture(GL_TEXTURE_2D,tankSkin);
     viewMatrix.identity();
     viewMatrix.Scale(0.3, 0.3, 0);
     program->setViewMatrix(viewMatrix);
@@ -331,6 +337,8 @@ int main(int argc, char *argv[])
     unitTexture = LoadTexture("Map_units.png");
     fire1Texture = LoadTexture("fire.png");
     fire2Texture = LoadTexture("fire2.png");
+    fontSheet = LoadTexture("font1.png");
+    tankSkin = LoadTexture("purple.png");
     mapSprite = new SheetSprite(program, mapTexture, 20, 13, .3);
     fire1Sprite = new SheetSprite(program, fire1Texture, 1, 1, .3);
     fire2Sprite = new SheetSprite(program, fire2Texture, 1, 1, .3);

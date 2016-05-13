@@ -20,6 +20,6 @@ using namespace std;
 
 #endif /* Utilities_hpp */
 
-void DrawText(ShaderProgram *program, GLuint fontTexture, std::string text, float size, float spacing);
+void DrawText(ShaderProgram *program, GLuint fontTexture, std::string text, float size, float spacing,float transx,float transy);
 
 GLuint LoadTexture(const char *image_path);
