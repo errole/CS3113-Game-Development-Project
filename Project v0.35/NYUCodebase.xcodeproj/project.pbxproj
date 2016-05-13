@@ -16,6 +16,8 @@
 		0AB6B7BC1CE4F2FC00405FAA /* T-90.obj in Resources */ = {isa = PBXBuildFile; fileRef = 0AB6B7BB1CE4F2FC00405FAA /* T-90.obj */; };
 		0AB6B7BE1CE4F6E600405FAA /* gamemap1.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = D34FAAEB1CD1ADD8007C4DBB /* gamemap1.txt */; };
 		0AB6B7BF1CE4F6F200405FAA /* T-90.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0AB6B7BB1CE4F2FC00405FAA /* T-90.obj */; };
+		0ABB7FF81CE57CAF005E6CE2 /* fire.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = D3D0A4C31CE4427800F2DF9E /* fire.png */; };
+		0ABB7FF91CE57CAF005E6CE2 /* fire2.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = D3D0A4C41CE4427800F2DF9E /* fire2.png */; };
 		6D5A86AE19AE5C710066C1FD /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D5A86AD19AE5C710066C1FD /* Cocoa.framework */; };
 		6D5A86B819AE5C710066C1FD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6D5A86B619AE5C710066C1FD /* InfoPlist.strings */; };
 		6D5A86BA19AE5C710066C1FD /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D5A86B919AE5C710066C1FD /* main.cpp */; };
@@ -52,6 +54,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
+				0ABB7FF81CE57CAF005E6CE2 /* fire.png in CopyFiles */,
+				0ABB7FF91CE57CAF005E6CE2 /* fire2.png in CopyFiles */,
 				0A5F73581CE50A5800F6DB08 /* font1.png in CopyFiles */,
 				0A5F73551CE5018300F6DB08 /* gamemap3.txt in CopyFiles */,
 				0A5F73521CE4FF9500F6DB08 /* gamemap2.txt in CopyFiles */,

@@ -95,23 +95,23 @@ void Setup (ShaderProgram &program, string file) {
 void loadUnits(){
     allUnits.clear();
     //Add Units
-    Entity unit(0, 0, Inf, Red, *unitSprite);
+    Entity unit(0, 20, Inf, Red, *unitSprite);
     Entity unit1(0, 21, APC, Red, *unitSprite);
     Entity unit2(0, 22, ATInf, Red, *unitSprite);
     Entity unit3(0, 23, LTank, Red, *unitSprite);
-    Entity unit4(1, 1, Inf, Blue, *unitSprite);
-    //Entity unit5(20, 2, APC, Blue, unitSprite);
-    //Entity unit6(20, 3, ATInf, Blue, unitSprite);
-    //Entity unit7(20, 4, LTank, Blue, unitSprite);
+    Entity unit4(20, 1, Inf, Blue, *unitSprite);
+    Entity unit5(20, 2, APC, Blue, *unitSprite);
+    Entity unit6(20, 3, ATInf, Blue, *unitSprite);
+    Entity unit7(20, 4, LTank, Blue, *unitSprite);
     
     allUnits.push_back(unit);
     allUnits.push_back(unit1);
     allUnits.push_back(unit2);
     allUnits.push_back(unit3);
     allUnits.push_back(unit4);
-    //allUnits.push_back(unit5);
-    //allUnits.push_back(unit6);
-    //allUnits.push_back(unit7);
+    allUnits.push_back(unit5);
+    allUnits.push_back(unit6);
+    allUnits.push_back(unit7);
 }
 
 void RenderGameLevel(ShaderProgram &program, float elapsed) {
@@ -269,7 +269,7 @@ void UpdateGameLevel(ShaderProgram &program) {
         }
     }
     
-    if(bluePlayerUnits==0 || redPlayerUnits==0){
+    if(bluePlayerUnits == 1 || redPlayerUnits == 1){
         state=STATE_MAIN_MENU;
     }
 }
