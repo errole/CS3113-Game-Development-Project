@@ -27,6 +27,10 @@ using namespace std;
 #define FIXED_TIMESTEP 0.0166666f
 #define MAX_TIMESTEPS 6
 float ticks;
+//Timer
+float lastFrameTicks = 0.0f;
+float lastElapsed = 0.0;
+float elapsed = 0.0;
 //Global Setup Parameters
 SDL_Window* displayWindow;
 SDL_Event event;
@@ -35,8 +39,14 @@ const Uint8 *keys = SDL_GetKeyboardState(NULL);
 ShaderProgram* program;
 bool done = false;
 //
-GLuint mapTexture = 0;
-GLuint unitTexture = 0;
+GLuint mapTexture;
+GLuint unitTexture;
+GLuint fire1Texture;
+GLuint fire2Texture;
+SheetSprite *mapSprite;
+SheetSprite *fire1Sprite;
+SheetSprite *fire2Sprite;
+SheetSprite *unitSprite;
 string levelFileOne = "gamemap1.txt";
 string levelFileTwo = "gamemap2.txt";
 string levelFileThree = "gamemap3.txt";
@@ -44,9 +54,6 @@ Mesh tank;
 //Game States
 enum GameState {STATE_MAIN_MENU, STATE_GAME_LEVEL_1, STATE_GAME_LEVEL_2, STATE_GAME_LEVEL_3, STATE_OVER};
 int state = STATE_MAIN_MENU;
-//Timer
-float lastFrameTicks = 0.0f;
-float elapsed = 0.0;
 //Matrices
 Matrix projectionMatrix;
 Matrix modelMatrix;
@@ -56,8 +63,6 @@ float posX=0;
 float posY=0;
 float zoom=.1;
 //Entity & Map Data
-SheetSprite *fire1Sprite;
-SheetSprite *fire2Sprite;
 bool moveWindowOn = false;
 bool warWindowOn = false;
 Entity *selectionWindow;
@@ -66,8 +71,8 @@ Entity *warWindow;
 Entity *unitSelected;
 Map level;
 vector<Entity> allUnits;
-int redPlayerKills = 0;
-int bluePlayerKills = 0;
+int redPlayerUnits = 0;
+int bluePlayerUnits = 0;
 int death = 0;
 int playerTurn = 1;
 
@@ -86,6 +91,27 @@ void Setup (ShaderProgram &program, string file) {
             level.readLayerData2(infile);
         }
     }
+}
+void loadUnits(){
+    allUnits.clear();
+    //Add Units
+    Entity unit(0, 0, Inf, Red, *unitSprite);
+    Entity unit1(0, 21, APC, Red, *unitSprite);
+    Entity unit2(0, 22, ATInf, Red, *unitSprite);
+    Entity unit3(0, 23, LTank, Red, *unitSprite);
+    Entity unit4(1, 1, Inf, Blue, *unitSprite);
+    //Entity unit5(20, 2, APC, Blue, unitSprite);
+    //Entity unit6(20, 3, ATInf, Blue, unitSprite);
+    //Entity unit7(20, 4, LTank, Blue, unitSprite);
+    
+    allUnits.push_back(unit);
+    allUnits.push_back(unit1);
+    allUnits.push_back(unit2);
+    allUnits.push_back(unit3);
+    allUnits.push_back(unit4);
+    //allUnits.push_back(unit5);
+    //allUnits.push_back(unit6);
+    //allUnits.push_back(unit7);
 }
 
 void RenderGameLevel(ShaderProgram &program, float elapsed) {
@@ -109,7 +135,6 @@ void RenderGameLevel(ShaderProgram &program, float elapsed) {
     program.setViewMatrix(viewMatrix);
 
 }
-
 void UpdateGameLevel(ShaderProgram &program) {
     float screenMovement = 0.1;
     float zoomRes = 0.01;
@@ -229,28 +254,23 @@ void UpdateGameLevel(ShaderProgram &program) {
     
     for(int i = 0;i<allUnits.size(); i++) {
         if(allUnits[i].baseHealth <= 0) {
-            if(death % 4 == 0){
-                allUnits[i].sprite = fire1Sprite;
-                death++;
-            }
-            else if(death % 4 == 1){
-                allUnits[i].sprite = fire2Sprite;
-                death++;
-            }
-            else{
-                if (allUnits[i].fraction == Red) {
-                    redPlayerKills++;
-                }
-                if (allUnits[i].fraction == Blue) {
-                    bluePlayerKills++;
-                }
                 allUnits.erase(allUnits.begin() + i);
-            }
         }
     }
     
-    if (redPlayerKills == 1 || bluePlayerKills == 1 ) {
-        state = STATE_OVER;
+    //Count Units Still Alive
+    redPlayerUnits=0;
+    bluePlayerUnits=0;
+    for(int i=0;i<allUnits.size();i++){
+        if (allUnits[i].fraction==Blue) {
+            bluePlayerUnits+=1;
+        }else if(allUnits[i].fraction==Red){
+            redPlayerUnits+=1;
+        }
+    }
+    
+    if(bluePlayerUnits==0 || redPlayerUnits==0){
+        state=STATE_MAIN_MENU;
     }
 }
 
@@ -268,15 +288,15 @@ void RenderMenu(){
     program->setViewMatrix(viewMatrix);
     tank.Render(program);
 }
-
 void UpdateMenu(){
     while (SDL_PollEvent(&event)) {
-        
-        if (state == STATE_MAIN_MENU) {
+        if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE || keys[SDL_SCANCODE_ESCAPE]) {
+            done = true;
+        }else{
             if (keys[SDL_SCANCODE_Q]) {
                 state = STATE_GAME_LEVEL_1;
                 Setup(*program, levelFileOne);
-                Mesh tank;
+                loadUnits();
             }
         }
     }
@@ -308,40 +328,22 @@ int main(int argc, char *argv[])
     //
     tank.loadOBJ("T-90.obj");
     mapTexture = LoadTexture("RPGpack_sheet.png");
-    SheetSprite mapSprite(program, mapTexture, 20, 13, .3);
     unitTexture = LoadTexture("Map_units.png");
-    GLuint fire1Texture = LoadTexture("fire.png");
-    GLuint fire2Texture = LoadTexture("fire2.png");
-    SheetSprite fire1Sprite(program, fire1Texture, 1, 1, .3);
-    SheetSprite fire2Sprite(program, fire2Texture, 1, 1, .3);
-    SheetSprite unitSprite(program, unitTexture, 26, 10, .3);
-    selectionWindow=new Entity(0, 0, NotType, None, mapSprite);
+    fire1Texture = LoadTexture("fire.png");
+    fire2Texture = LoadTexture("fire2.png");
+    mapSprite = new SheetSprite(program, mapTexture, 20, 13, .3);
+    fire1Sprite = new SheetSprite(program, fire1Texture, 1, 1, .3);
+    fire2Sprite = new SheetSprite(program, fire2Texture, 1, 1, .3);
+    unitSprite = new SheetSprite(program, unitTexture, 26, 10, .3);
+    selectionWindow=new Entity(0, 0, NotType, None, *mapSprite);
     selectionWindow->index = 15;
-    moveWindow=new Entity(0, 0, NotType, None, mapSprite);
+    moveWindow=new Entity(0, 0, NotType, None, *mapSprite);
     moveWindow->index = 17;
-    warWindow=new Entity(0, 0, NotType, None, mapSprite);
+    warWindow=new Entity(0, 0, NotType, None, *mapSprite);
     warWindow->index = 16;
-    unitSelected = new Entity(0, 0, NotType, None, mapSprite);
+    unitSelected = new Entity(0, 0, NotType, None, *mapSprite);
+    loadUnits();
     
-    //Add Units
-    Entity unit(0, 20, Inf, Red, unitSprite);
-    Entity unit1(0, 21, APC, Red, unitSprite);
-    Entity unit2(0, 22, ATInf, Red, unitSprite);
-    Entity unit3(0, 23, LTank, Red, unitSprite);
-    
-    Entity unit4(20, 1, Inf, Blue, unitSprite);
-    Entity unit5(20, 2, APC, Blue, unitSprite);
-    Entity unit6(20, 3, ATInf, Blue, unitSprite);
-    Entity unit7(20, 4, LTank, Blue, unitSprite);
-    
-    allUnits.push_back(unit);
-    allUnits.push_back(unit1);
-    allUnits.push_back(unit2);
-    allUnits.push_back(unit3);
-    allUnits.push_back(unit4);
-    allUnits.push_back(unit5);
-    allUnits.push_back(unit6);
-    allUnits.push_back(unit7);
     
     while (!done) {
         
