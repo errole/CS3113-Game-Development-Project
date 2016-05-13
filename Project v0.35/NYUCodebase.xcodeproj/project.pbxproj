@@ -211,6 +211,8 @@
 				6DE9D2F01BA6AB8C002D599C /* fragment_textured.glsl */,
 				6DC707691BA7273500225B7D /* vertex_textured.glsl */,
 				6DEF23C01B96CC2600BCE792 /* vertex.glsl */,
+				D3D787991CE54ED5001EE694 /* Mesh.cpp */,
+				D3D7879A1CE54ED5001EE694 /* Mesh.hpp */,
 				6DEF23BC1B96CC2600BCE792 /* Matrix.cpp */,
 				6DEF23BD1B96CC2600BCE792 /* Matrix.h */,
 				6DEF23BE1B96CC2600BCE792 /* ShaderProgram.cpp */,
@@ -222,8 +224,6 @@
 				D3D0A4BF1CE441BA00F2DF9E /* Map.cpp */,
 				D3D0A4C01CE441BA00F2DF9E /* Map.h */,
 				6D5A86B919AE5C710066C1FD /* main.cpp */,
-				D3D787991CE54ED5001EE694 /* Mesh.cpp */,
-				D3D7879A1CE54ED5001EE694 /* Mesh.hpp */,
 			);
 			name = Code;
 			sourceTree = "<group>";

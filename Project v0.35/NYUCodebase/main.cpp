@@ -56,6 +56,8 @@ float posX=0;
 float posY=0;
 float zoom=.1;
 //Entity & Map Data
+SheetSprite *fire1Sprite;
+SheetSprite *fire2Sprite;
 bool moveWindowOn = false;
 bool warWindowOn = false;
 Entity *selectionWindow;
@@ -223,6 +225,32 @@ void UpdateGameLevel(ShaderProgram &program) {
     if (keys[SDL_SCANCODE_L]) {
         zoom -= zoomRes;
     }
+    
+    for(int i = 0;i<allUnits.size(); i++) {
+        if(allUnits[i].baseHealth <= 0) {
+            if(death % 4 == 0){
+                allUnits[i].sprite = fire1Sprite;
+                death++;
+            }
+            else if(death % 4 == 1){
+                allUnits[i].sprite = fire2Sprite;
+                death++;
+            }
+            else{
+                if (allUnits[i].fraction == Red) {
+                    redPlayerKills++;
+                }
+                if (allUnits[i].fraction == Blue) {
+                    bluePlayerKills++;
+                }
+                allUnits.erase(allUnits.begin() + i);
+            }
+        }
+    }
+    
+    if (redPlayerKills == 1 || bluePlayerKills == 1 ) {
+        state = STATE_OVER;
+    }
 }
 
 void RenderMenu(){
@@ -253,32 +281,6 @@ void UpdateMenu(){
     }
 }
 
-void update() {
-    switch(state) {
-        case STATE_OVER: {
-            state = STATE_MAIN_MENU;
-        }
-        case STATE_MAIN_MENU: {
-            RenderMenu();
-            UpdateMenu();
-            break;
-        }
-        case STATE_GAME_LEVEL_1:
-            RenderGameLevel(*program, elapsed);
-            UpdateGameLevel(*program);
-            break;
-        case STATE_GAME_LEVEL_2:
-            RenderGameLevel(*program, elapsed);
-            UpdateGameLevel(*program);
-            break;
-        case STATE_GAME_LEVEL_3:
-            RenderGameLevel(*program, elapsed);
-            UpdateGameLevel(*program);
-            break;
-    }
-}
-
-
 int main(int argc, char *argv[])
 {
     SDL_Init(SDL_INIT_VIDEO);
@@ -308,8 +310,8 @@ int main(int argc, char *argv[])
     SheetSprite mapSprite(program, mapTexture, 20, 13, .3);
     unitTexture = LoadTexture("Map_units.png");
     GLuint fire1Texture = LoadTexture("fire.png");
-    SheetSprite fire1Sprite(program, fire1Texture, 1, 1, .3);
     GLuint fire2Texture = LoadTexture("fire2.png");
+    SheetSprite fire1Sprite(program, fire1Texture, 1, 1, .3);
     SheetSprite fire2Sprite(program, fire2Texture, 1, 1, .3);
     SheetSprite unitSprite(program, unitTexture, 26, 10, .3);
     selectionWindow=new Entity(0, 0, NotType, None, mapSprite);
@@ -346,34 +348,28 @@ int main(int argc, char *argv[])
         glClearColor(0.53f, 0.808f, 0.98f, 0.1f);
         glClear(GL_COLOR_BUFFER_BIT);
         
-        update();
-        
-        for(int i = 0;i<allUnits.size(); i++) {
-            if(allUnits[i].baseHealth <= 0) {
-                if(death % 4 == 0){
-                    allUnits[i].sprite = &fire1Sprite;
-                    death++;
-                }
-                else if(death % 4 == 1){
-                    allUnits[i].sprite = &fire2Sprite;
-                    death++;
-                }
-                else{
-                    if (allUnits[i].fraction == Red) {
-                        redPlayerKills++;
-                    }
-                    if (allUnits[i].fraction == Blue) {
-                        bluePlayerKills++;
-                    }
-                    allUnits.erase(allUnits.begin() + i);
-                }
+        switch(state) {
+            case STATE_OVER: {
+                state = STATE_MAIN_MENU;
             }
+            case STATE_MAIN_MENU: {
+                RenderMenu();
+                UpdateMenu();
+                break;
+            }
+            case STATE_GAME_LEVEL_1:
+                RenderGameLevel(*program, elapsed);
+                UpdateGameLevel(*program);
+                break;
+            case STATE_GAME_LEVEL_2:
+                RenderGameLevel(*program, elapsed);
+                UpdateGameLevel(*program);
+                break;
+            case STATE_GAME_LEVEL_3:
+                RenderGameLevel(*program, elapsed);
+                UpdateGameLevel(*program);
+                break;
         }
-        
-        if (redPlayerKills == 1 || bluePlayerKills == 1 ) {
-            state = STATE_OVER;
-        }
-        
         
         ticks = (float)SDL_GetTicks()/1000.0f;
         float elapsed = ticks - lastFrameTicks;
