@@ -118,6 +118,7 @@ void UpdateGameLevel(ShaderProgram &program) {
     if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE || keys[SDL_SCANCODE_ESCAPE]) {
         done = true;
     }else if (event.type == SDL_KEYDOWN) {
+        //Adjust Selection Window
         if (keys[SDL_SCANCODE_W] && selectionWindow->y > 0) {
             selectionWindow->y -= 1;
         }
@@ -191,6 +192,7 @@ void UpdateGameLevel(ShaderProgram &program) {
                 }
             }
         }
+        cout << level.levelData[selectionWindow->y][selectionWindow->x];
     }
     }
     //Map Controls
@@ -225,7 +227,6 @@ void UpdateGameLevel(ShaderProgram &program) {
     if (keys[SDL_SCANCODE_L]) {
         zoom -= zoomRes;
     }
-    
     for(int i = 0;i<allUnits.size(); i++) {
         if(allUnits[i].baseHealth <= 0) {
             if(death % 4 == 0){
