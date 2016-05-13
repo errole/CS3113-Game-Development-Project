@@ -134,9 +134,9 @@ void RenderGameLevel(ShaderProgram &program, float elapsed) {
         warWindow->Render(modelMatrix);
     }
     if (fireArray.size() > 0) {
+        cout << fireArray.size();
         for(int i =0; i<fireArray.size();i++){
             fireArray[i].Render(&program, modelMatrix);
-            fireArray[i+1].Render(&program, modelMatrix);
         }
     }
     fireArray.clear();

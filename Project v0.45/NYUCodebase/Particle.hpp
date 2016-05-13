@@ -29,8 +29,6 @@ public:
     float TILE_SIZE=.3;
     float size=1;
     float aspect=1.0;
-    float xRotation;
-    vector<float> vertices;
 };
 
 /*class ParticleEmitter {

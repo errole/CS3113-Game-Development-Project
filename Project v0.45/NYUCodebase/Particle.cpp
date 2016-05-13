@@ -14,43 +14,14 @@
     }
 }*/
 
-Particle::Particle(float x, float y, float size, GLuint& texture): texture(texture), size(size), x(x), y(y) {
-    vertices.insert(vertices.end(), {
-        TILE_SIZE * x, -TILE_SIZE * y,
-        TILE_SIZE * x, (-TILE_SIZE * y)-TILE_SIZE,
-        (TILE_SIZE * x)+TILE_SIZE, (-TILE_SIZE * y)-TILE_SIZE,
-        TILE_SIZE * x, -TILE_SIZE * y,
-        (TILE_SIZE * x)+TILE_SIZE, (-TILE_SIZE * y)-TILE_SIZE,
-        (TILE_SIZE * x)+TILE_SIZE, -TILE_SIZE * y
-    });
-}
+Particle::Particle(float x, float y, float size, GLuint& texture): texture(texture), size(size), x(x), y(y) {}
 
-void Particle::Update(){
-    vertices.clear();
-    float cosTheta = cosf(xRotation);
-    float sinTheta = sinf(xRotation);
-    float TL_x = cosTheta * -size - sinTheta * size;
-    float TL_y = sinTheta * -size + cosTheta * size;
-    float BL_x = cosTheta * -size - sinTheta * -size;
-    float BL_y = sinTheta * -size + cosTheta * -size;
-    float BR_x = cosTheta * size - sinTheta * -size;
-    float BR_y = sinTheta * size + cosTheta * -size;
-    float TR_x = cosTheta * size - sinTheta * size;
-    float TR_y = sinTheta * size + cosTheta * size;
-    vertices.insert(vertices.end(), {
-        x + TL_x, y + TL_y,
-        x + BL_x, y + BL_y,
-        x + TR_x, y + TR_y,
-        x + TR_x, y + TR_y,
-        x + BL_x, y + BL_y,
-        x + BR_x, y + BR_y
-    });
-}
+void Particle::Update(){}
 
 void Particle::Render( ShaderProgram *program, Matrix &modelMatrix ){
     program->setModelMatrix(modelMatrix);
-    //modelMatrix.identity();
-    modelMatrix.Rotate(1);
+    modelMatrix.identity();
+    
     float u = 1;
     float v = 1;
     float spriteWidth= 1;
