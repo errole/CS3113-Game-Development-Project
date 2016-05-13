@@ -56,7 +56,7 @@ public:
     int y;
     int index;
     SheetSprite *sprite;
-    bool canAttack;
+    bool canAttack=1;
     
     float baseHealth=10;
     float baseDamage=5;

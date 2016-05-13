@@ -160,6 +160,7 @@ void Entity::rechargeMovement(){
             baseMovement= movementModifier[1][x];
         }
     }
+    canAttack=1;
 }
 
 void Entity::playAttackMusic(UnitType unitType){

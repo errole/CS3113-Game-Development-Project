@@ -49,8 +49,8 @@ void Particle::Update(){
 
 void Particle::Render( ShaderProgram *program, Matrix &modelMatrix ){
     program->setModelMatrix(modelMatrix);
-    modelMatrix.identity();
-    
+    //modelMatrix.identity();
+    modelMatrix.Rotate(1);
     float u = 1;
     float v = 1;
     float spriteWidth= 1;

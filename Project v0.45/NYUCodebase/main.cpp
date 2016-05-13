@@ -194,6 +194,7 @@ void UpdateGameLevel(ShaderProgram &program) {
                             
                             allUnits[i].playAttackMusic(allUnits[i].unitType);
                             unitSelected->attack(&allUnits[i]);
+                            unitSelected->canAttack=0;
                         }
                     }
                     warWindowOn = false;
@@ -201,7 +202,7 @@ void UpdateGameLevel(ShaderProgram &program) {
             }
             else {
                 for(int i = 0; i < allUnits.size(); i++) {
-                    if(allUnits[i].x == selectionWindow->x && allUnits[i].y == selectionWindow->y && allUnits[i].fraction == playerTurn) {
+                    if(allUnits[i].x == selectionWindow->x && allUnits[i].y == selectionWindow->y && allUnits[i].fraction == playerTurn && allUnits[i].canAttack==1) {
                         warWindowOn = true;
                         unitSelected = &allUnits[i];
                         warWindow->x = unitSelected->x;
