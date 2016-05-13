@@ -23,3 +23,5 @@ using namespace std;
 void DrawText(ShaderProgram *program, GLuint fontTexture, std::string text, float size, float spacing,float transx,float transy);
 
 GLuint LoadTexture(const char *image_path);
+
+float lerp(float v0, float v1, float t);

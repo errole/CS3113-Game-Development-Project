@@ -11,6 +11,7 @@
 #include <vector>
 #include <stdio.h>
 #include "ShaderProgram.h"
+#include <math.h>
 
 #endif /* Particle_hpp */
 using namespace std;
@@ -19,7 +20,8 @@ class Particle {
 public:
     Particle(float x, float y, float size, GLuint& texture);
     void Render(ShaderProgram *program, Matrix &modelMatrix);
-    
+    void Update();
+
     float x;
     float y;
     GLuint& texture;
@@ -27,7 +29,8 @@ public:
     float TILE_SIZE=.3;
     float size=1;
     float aspect=1.0;
-    
+    float xRotation;
+    vector<float> vertices;
 };
 
 /*class ParticleEmitter {
